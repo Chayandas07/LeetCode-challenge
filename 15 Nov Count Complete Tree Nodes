@@ -1,0 +1,16 @@
+class Solution {
+public:
+    
+    int helper (TreeNode *root){        
+        if (root == NULL)
+            return 0;
+        
+        int no_of_left_nodes = helper (root -> left);
+        int no_of_right_nodes = helper (root -> right);
+        
+        return 1 + no_of_left_nodes + no_of_right_nodes;
+    }
+    int countNodes(TreeNode* root) {
+        return helper (root);
+    }
+};
