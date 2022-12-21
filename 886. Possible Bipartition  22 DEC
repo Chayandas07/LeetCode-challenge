@@ -1,0 +1,32 @@
+class Solution {
+public:
+    bool possibleBipartition(int n, vector<vector<int>>& dislikes) {
+        const int nax = 1e4 + 9;
+        vector<int> graph[nax];
+        for (auto &x: graph)    x.clear();
+        for (auto x: dislikes) {
+            int u = x[0];
+            int v = x[1];
+            graph[u].push_back(v);
+            graph[v].push_back(u);
+        }
+        vector<int> color(nax, -1);
+        auto dfs = [&] (auto &&dfs, int u) -> bool {
+            for (int v: graph[u]) {
+                if (color[v] == color[u])   return false;
+                if (color[v] == -1) {
+                    color[v] = 1 - color[u];
+                    if (!dfs(dfs, v)) return false;
+                }
+            }
+            return true;
+        };
+        for (int i = 1; i <= n; ++i) {
+            if (color[i] == -1) {
+                color[i] = 1;
+                if (!dfs(dfs, i)) return false;
+            }
+        }
+        return true;
+    }
+};
