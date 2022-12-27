@@ -1,0 +1,21 @@
+class Solution {
+public:
+    int maximumBags(vector<int>& cap, vector<int>& rock, int ad) {
+        for(int i=0;i<cap.size();i++){
+            cap[i]-=rock[i];
+        }
+        sort(cap.begin(),cap.end());
+        int c=0;
+        for(auto num:cap){
+            if(num==0){
+                c++;
+                cout<<c<<endl;
+                 continue;
+            }
+            ad-=num;
+            if(ad>=0)c++;
+            else break;
+        }
+        return c;
+    }
+};
