@@ -1,0 +1,11 @@
+class Solution {
+public:
+    int xorBeauty(vector<int>& numbers) {
+        int ansed =0 ;
+        for(auto node : numbers){
+            ansed ^= node;
+            
+        }
+        return ansed;
+    }
+};
