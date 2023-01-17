@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int minFlipsMonoIncr(string s) {
+        int flips=0,count=0;
+        for (auto c:s)
+        {
+            if(c == '1')
+              count++;
+            else
+             flips++;
+            flips = min(flips,count);
+        }
+        return flips;
+        
+    }
+};
