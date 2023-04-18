@@ -1,0 +1,12 @@
+class Solution {
+public:
+    string mergeAlternately(string w1, string w2) {
+        int i=0,j=0;  // Keeping track of the indexes of the two strings
+        string s="";  // String which is need to be returned
+        while(i < w1.length() || j < w2.length()){  // So theat while may run if anyone of the strings is not exausted
+            if(i<w1.length())   s += w1[i++];  // If w1 is not exausted then s is appended by the w1 character first
+            if(j<w2.length())   s += w2[j++];  // If w2 is not exausted then s is appended by the w2 character 
+        } 
+        return s;  // Returning the resulting string    
+    }
+};
