@@ -1,0 +1,49 @@
+class Solution {
+public:
+int mod=1000000007;
+    int solveRec(int ind,string &s,int k){
+        if(ind==s.size()) return 1;
+        if(s[ind]=='0') return 0;
+        long ans=0;
+        for(int i=ind;i<s.size();i++){
+            string temp=s.substr(ind,i-ind+1);
+            if(stoll(temp)<=k) ans+=solveRec(i+1,s,k);
+        }
+        return (int)ans%mod;
+    }
+    int solveMemo(int ind,string &s,int k,vector<int>&dp){
+        if(ind==s.size()) return 1;
+        if(s[ind]=='0') return 0;
+        if(dp[ind]!=-1) return dp[ind];
+        long ans=0;
+        int size=min(ind+to_string(k).size(),s.size());
+
+        for(int i=ind;i<size;i++){
+            string temp=s.substr(ind,i-ind+1);
+            if(stoll(temp)<=k) ans+=solveMemo(i+1,s,k,dp);
+        }
+        return dp[ind]=(int)ans%mod;
+    }
+     int solveTabu(string &s,int k){
+       vector<int>dp(s.size()+1,0);
+       dp[s.size()]=1;
+      for(int ind=s.size()-1;ind>=0;ind--){
+        long ans=0;
+        if(s[ind]=='0') continue;
+        int size=min(ind+to_string(k).size(),s.size());
+        for(int i=ind;i<size;i++){
+            string temp=s.substr(ind,i-ind+1);
+            if(stoll(temp)<=k) ans=(ans+dp[i+1])%mod;
+        }
+         dp[ind]=(int)ans%mod;
+      }
+      return dp[0];
+    }
+     
+    int numberOfArrays(string s, int k) {
+        // return solveRec(0,s,k);
+        // vector<int>dp(s.size(),-1);
+        // return solveMemo(0,s,k,dp);
+        return solveTabu(s,k);
+    }
+};
