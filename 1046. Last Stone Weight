@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int lastStoneWeight(vector<int>& stones) {
+        int n =stones.size();
+
+        sort(stones.begin(),stones.end());
+
+        while(n>1 &&stones[n-1]!=0 &&stones[n-2]!=0 ){
+            stones[n-2]=stones[n-1] - stones[n-2];
+            stones[n-1]=0;
+            sort(stones.begin(),stones.end());
+        }
+        return stones[n-1];
+    }
+};
