@@ -1,0 +1,44 @@
+/**
+ * @param {number} n
+ * @param {number} m
+ * @param {number} k
+ * @return {number}
+ */
+var numOfArrays = function (n, m, k) {
+
+  const dp = new Array(51)
+    .fill(null)
+    .map(() => new Array(51).fill(null).map(() => new Array(101).fill(-1)));
+
+  const MOD = 1_00_00_00_007;
+
+  function dfs(idx, lenLIS, largest) {
+    if (idx === n) {
+      if (lenLIS === k) {
+        return 1;
+      }
+      return 0;
+    }
+
+    if (dp[idx][lenLIS][largest] !== -1) {
+      return dp[idx][lenLIS][largest];
+    }
+
+    let ans = 0;
+
+    for (let i = 1; i <= m; i++) {
+      if (i > largest) {
+        ans += dfs(idx + 1, lenLIS + 1, i);
+      } else {
+        ans += dfs(idx + 1, lenLIS, largest);
+      }
+
+      ans %= MOD;
+    }
+
+    dp[idx][lenLIS][largest] = ans;
+    return ans;
+  }
+
+  return dfs(0, 0, 0)
+};
