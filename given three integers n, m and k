@@ -1,0 +1,52 @@
+class Solution:
+    def __init__(self):
+        self.dp = [[-1] * 505 for _ in range(505)]  # Dynamic programming array
+        self.nums1_size = 0
+        self.nums2_size = 0
+
+    # Recursive function to calculate the maximum dot product
+    def calculate_dot_product(self, nums1: list[int], nums2: list[int], idx1: int, idx2: int) -> int:
+        if idx1 == self.nums1_size or idx2 == self.nums2_size:
+            return 0
+
+        if self.dp[idx1][idx2] != -1:
+            return self.dp[idx1][idx2]
+
+        # Calculate dot product for three options
+        option1 = nums1[idx1] * nums2[idx2] + self.calculate_dot_product(nums1, nums2, idx1 + 1, idx2 + 1)
+        option2 = self.calculate_dot_product(nums1, nums2, idx1, idx2 + 1)
+        option3 = self.calculate_dot_product(nums1, nums2, idx1 + 1, idx2)
+
+        self.dp[idx1][idx2] = max(option1, option2, option3)  # Store the maximum dot product
+        return self.dp[idx1][idx2]
+
+
+    def maxDotProduct(self, nums1: list[int], nums2: list[int]) -> int:
+        self.nums1_size = len(nums1)
+        self.nums2_size = len(nums2)
+
+        first_max = float('-inf')
+        second_max = float('-inf')
+        first_min = float('inf')
+        second_min = float('inf')
+
+        # Calculate maximum and minimum values for nums1
+        for num in nums1:
+            first_max = max(first_max, num)
+            first_min = min(first_min, num)
+        # Calculate maximum and minimum values for nums2
+        for num in nums2:
+            second_max = max(second_max, num)
+            second_min = min(second_min, num)
+
+        # Check special cases where all elements are negative
+        if (first_max < 0 and second_min > 0) or (first_min > 0 and second_max < 0):
+            return max(first_max * second_min, first_min * second_max)
+
+        # Initialize dp array with -1
+        for i in range(505):
+            for j in range(505):
+                self.dp[i][j] = -1
+
+        # Calculate the maximum dot product recursively
+        return self.calculate_dot_product(nums1, nums2, 0, 0)
