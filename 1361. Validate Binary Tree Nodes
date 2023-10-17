@@ -1,0 +1,72 @@
+class Solution {
+public:
+    bool ans = 1;
+    vector<int> topo(int V, vector<int> adj[],vector<int>&ans) 
+	{
+	    vector<int>indeg(V,0);
+	    for(int i = 0; i < V; i++){
+	        for(auto x : adj[i]){
+	            indeg[x]++;
+	        }
+	    }
+	    queue<int>q;
+	    for(int i = 0; i < V ;i++){
+	        if(indeg[i] == 0){
+	            q.push(i);
+	        }
+	    }
+	    while(!q.empty()){
+	        int node = q.front();
+	        q.pop();
+	        ans.push_back(node);
+	        
+	        for(auto x : adj[node]){
+	            indeg[x]--;
+	            if(indeg[x] == 0) q.push(x);
+	        }
+	        
+	    }
+	    return ans;
+	}
+
+    void dfs(int ind,vector<int> &vis,vector<int> adj[]){
+        vis[ind] = 1;
+
+        for(int i = 0; i < adj[ind].size(); i++){
+            if(!vis[adj[ind][i]]){
+                dfs(adj[ind][i], vis, adj);
+            }else{
+                ans = 0;
+            }
+        }
+    }
+    bool validateBinaryTreeNodes(int n, vector<int>& leftChild, vector<int>& rightChild) {
+        
+        vector<int> adj[n];
+        vector<int> topoSort;
+        for(int i = 0; i < n ;i++){
+            if(leftChild[i] != -1)
+            adj[i].push_back(leftChild[i]);
+            if(rightChild[i] != -1)
+            adj[i].push_back(rightChild[i]);
+        }
+
+        topo(n,adj,topoSort);
+        if(topoSort.size() != n)return false;
+
+        vector<int>vis(n,0);
+        int ct = 0;
+        for(auto x: topoSort)cout<<x<<" ";
+
+        for(int i = 0; i < topoSort.size(); i++){
+            if(!vis[topoSort[i]]){
+                dfs(topoSort[i] ,vis ,adj);
+                ct ++;
+            }
+        }
+        cout<<ct <<endl;
+        if(ct > 1)return false;
+        return ans;
+
+    }
+};
