@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int reductionOperations(vector<int>& nums) {
+        unordered_map<int,int>mp;
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        if(n<2) return 0;
+
+        for(auto i:nums){
+            mp[i]++;
+        }
+        long long count=0;
+        int j=0;
+        for(int i=0;i<n;i++){
+            while(nums[i]==nums[i+1] and i<n) i++;
+
+            count+=mp[nums[i]]*j;
+            j++;
+
+        }
+
+        return count;
+    }
+};
