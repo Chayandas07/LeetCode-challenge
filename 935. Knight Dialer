@@ -1,0 +1,31 @@
+class Solution {
+public:
+    int knightDialer(int n) {
+       if(n==1) return 10;
+        unordered_map<int,vector<int>>mp;
+        mp[0]={4,6};
+        mp[1]={6,8};
+        mp[2]={7,9};
+        mp[3]={4,8};
+        mp[4]={0,3,9};
+        mp[6]={0,1,7};
+        mp[7]={2,6};
+        mp[8]={1,3};
+        mp[9]={2,4};
+        vector<int>v(10,1);
+        for(int i=2;i<=n;i++){
+            vector<int>tmp(10);
+            for(auto [key,val]:mp){
+                for(auto j:val){
+                    tmp[key]=(tmp[key]+v[j])%1000000007;
+                }
+            }
+            v=tmp;
+        }
+        int ans=0;
+        for(auto i:v){
+            ans=(ans+i)%1000000007;
+        }
+        return ans;
+    }
+};
