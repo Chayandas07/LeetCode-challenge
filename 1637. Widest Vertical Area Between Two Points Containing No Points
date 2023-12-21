@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int maxWidthOfVerticalArea(vector<vector<int>>& points) {
+
+        int n = points.size();
+        
+        //sort the array on the first value in ascending order.
+        sort(points.begin(), points.end());
+
+        //Calculating Area between each points and maintining that in maxArea
+        int maxArea = 0;
+        for(int i=1;i<n;i++) {
+            int currArea = points[i][0]-points[i-1][0];
+            maxArea = max(maxArea, currArea);
+        }
+
+        return maxArea;
+        
+    }
+};
