@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxLengthBetweenEqualCharacters(const std::string& s) {
+        std::vector<std::string> s1;
+        for (char c : s) {
+            s1.push_back(std::string(1, c));
+        }
+
+        for (int i = s1.size() - 1; i > 0; --i) {
+            for (int j = 0; j + i < s1.size(); ++j) {
+                if (s1[j] == s1[j + i]) {
+                    return i - 1;
+                }
+            }
+        }
+
+        return -1;
+    }
+};
