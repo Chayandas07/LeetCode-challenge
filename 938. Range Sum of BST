@@ -1,0 +1,16 @@
+class Solution {
+public:
+    int sum = 0;
+    
+    void inorder(TreeNode* root, int L, int R){
+        if(root->left)inorder(root->left, L, R);
+        if(root->val>=L && root->val<=R)sum+=root->val;
+        if(root->right)inorder(root->right, L, R);
+    }
+    int rangeSumBST(TreeNode* root, int L, int R) {
+        
+        //SOLUCHAN STARTS HERE - DUN DUN DUN DUN 
+        inorder(root, L, R);
+        return sum;
+    }
+};
