@@ -1,0 +1,23 @@
+class Solution {
+public:
+    int minMovesToSeat(vector<int>& seats, vector<int>& students) {
+        const int n=seats.size();
+        sort(seats.begin(), seats.end());
+        sort(students.begin(), students.end());
+        int moves=0;
+        for (int i=0; i<n; i++) 
+            moves+=abs(students[i]-seats[i]);
+        return moves;
+    }
+};
+
+
+
+
+
+auto init = []() {
+    ios::sync_with_stdio(false);
+    cin.tie(nullptr);
+    cout.tie(nullptr);
+    return 'c';
+}();
