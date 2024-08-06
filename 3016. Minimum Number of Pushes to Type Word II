@@ -1,0 +1,36 @@
+class Solution {
+public:
+    // bool ccompare( pair<char, int>& a, pair<char, int>& b) {
+    //     return a.second > b.second;
+    // }
+    int minimumPushes(string word) {
+        vector<pair<char, int>> freq(26);
+        // initialising a vector of pairs which will store the alphabet and its
+        // corresponding frequency
+        for (int i = 0; i < 26; i++) {
+            freq[i].first = 'a' + i;
+            freq[i].second = 0;
+        }
+        // counting an aplhabets frequency
+        for (int i = 0; i < word.length(); i++) {
+            if (word[i] >= 'a' && word[i] <= 'z') {
+                freq[word[i] - 'a'].second++;
+            }
+        }
+        // sorting it in decreasing order (priorty to alphabet with high
+        // frequency)
+        sort(freq.begin(), freq.end(),
+             [](pair<char, int>& a, pair<char, int>& b) {
+                 return a.second > b.second;
+             });
+        int push = 0;
+        for (int i = 0; i < freq.size(); i++) {
+            if (freq[i].second == 0)
+                break;
+            push += freq[i].second * ((i / 8) + 1);
+            // we have 8 keys available (2 to 9), so every 8 characters, we
+            // increase the number of pushes needed.
+        }
+        return push;
+    }
+};
