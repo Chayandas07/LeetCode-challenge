@@ -1,0 +1,26 @@
+class Solution {
+public:
+    int smallestDistancePair(vector<int>& nums, int k) {
+        ios_base::sync_with_stdio(false);cin.tie(NULL);cout.tie(NULL);
+        const int N=1e6+1;
+        int mp[N]={0}; 
+        sort(nums.begin(),nums.end());
+        int n=nums.size();
+        for (int i=0;i<n;i++){
+            for (int j=i+1;j<n;j++){
+                mp[abs(nums[i]-nums[j])]++;
+            }
+        }
+        int ct=0;
+        int diff=0;
+        for (int i=0;i<N;i++){
+            cout<<mp[i]<<endl;
+            ct+=mp[i];
+            if (ct>=k){
+                diff=i;
+                break;
+            }
+        }
+        return diff++;
+    }
+};
