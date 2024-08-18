@@ -1,0 +1,36 @@
+class Solution {
+public:
+    int nthUglyNumber(int n) {
+        vector<long long> arr2;
+        vector<long long> arr3;
+        vector<long long> arr5;
+        vector<long long> result;
+        if(n==1){
+            return 1; 
+        }
+        else{
+            result.push_back(1);
+            arr2.push_back(2);
+            arr3.push_back(3);
+            arr5.push_back(5);
+
+            int i=0;
+            int j=0;
+            int k=0;
+            
+            while (result.size() < n) {
+                int mini = min({arr2[i], arr3[j], arr5[k]});
+                result.push_back(mini);
+
+                if (mini == arr2[i]) i++;
+                if (mini == arr3[j]) j++;
+                if (mini == arr5[k]) k++;
+
+                arr2.push_back(result.back() * 2);
+                arr3.push_back(result.back() * 3);
+                arr5.push_back(result.back() * 5);
+            }
+            return result.back();
+        }
+    }
+};
