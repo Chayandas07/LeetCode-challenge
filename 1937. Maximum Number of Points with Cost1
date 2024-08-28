@@ -1,0 +1,34 @@
+class Solution {
+public:
+    int n; //row
+    int m; //column
+    bool flag;
+    void dfs(vector<vector<int>>& grid1, vector<vector<int>>& grid2,int row,int column){
+        if (row < 0 || row >= n || column < 0 || column >= m || grid2[row][column] == 0) {
+            return;
+        }
+        grid2[row][column] = 0; // mark visited
+        dfs(grid1, grid2, row - 1, column); // up
+        dfs(grid1, grid2, row + 1, column); // down
+        dfs(grid1, grid2, row, column - 1); // left
+        dfs(grid1, grid2, row, column + 1); // right
+        if (grid1[row][column] == 0) {
+            flag = false; // no island found
+        }  
+    }
+    int countSubIslands(vector<vector<int>>& grid1, vector<vector<int>>& grid2) {
+        n = grid1.size();
+        m = grid1[0].size();
+        int countSubIslands = 0;
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                if (grid2[i][j] == 1) {
+                    flag = true;
+                    dfs(grid1, grid2, i, j);
+                    countSubIslands += flag;
+                }
+            }
+        }
+        return countSubIslands;
+    }
+};
