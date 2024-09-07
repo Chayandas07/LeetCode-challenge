@@ -1,0 +1,33 @@
+class Solution {
+public:
+    // check all the corresponding downward values and return true if they are the same
+    bool comparison(TreeNode* root, ListNode* head) {
+        if(!head) return true;
+        if(!root) return false;
+        if(root->val != head->val) return false;
+
+        return comparison(root->left, head->next) || comparison(root->right, head->next);
+    }
+    
+    bool res = false;
+
+    //traverse all nodes in tree to check if the node value is equal to list's head
+    void inOrder(TreeNode* root, ListNode* head) {
+        if(!root) return;
+        
+        //if the values are equal, then check the next values
+        if(root->val == head->val) {
+            res = comparison(root, head);
+        }
+        if(res) return;
+        inOrder(root->left, head);
+        if(res) return;
+        inOrder(root->right, head);
+        if(res) return;
+    }
+    bool isSubPath(ListNode* head, TreeNode* root) {
+        
+        inOrder(root, head);
+        return res;
+    }
+};
