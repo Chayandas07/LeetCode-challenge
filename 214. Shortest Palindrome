@@ -1,0 +1,25 @@
+class Solution {
+public:
+    string shortestPalindrome(string s) {
+        ios_base::sync_with_stdio(false);
+        cin.tie(NULL);
+        cout.tie(NULL);
+        // Note:
+        
+
+
+        string originalString = s;
+        reverse(s.begin(), s.end());
+
+        int sz = s.size();
+
+        for(int i = 0 ; i <= sz - 1 ; i++){
+            if(!memcmp(originalString.c_str(), s.c_str() + i, sz - i)){
+                return s.substr(0, i) + originalString;
+            }
+        }
+
+        return s + originalString;
+
+    }
+};
