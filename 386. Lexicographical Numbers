@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<int> lexicalOrder(int n) {
+        priority_queue<string, vector<string>, greater<string>> heap;  // Min-heap for lexicographical order
+
+        // Push all numbers as strings into the priority queue
+        for (int i = 1; i <= n; i++) {
+            heap.push(to_string(i));
+        }
+
+        vector<int> ans;
+
+        // Pop elements from the heap, convert them back to integers, and store them in the answer
+        while (!heap.empty()) {
+            ans.push_back(stoi(heap.top()));  // Convert string back to integer
+            heap.pop();
+        }
+
+        return ans;
+    }
+};
