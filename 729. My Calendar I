@@ -1,0 +1,17 @@
+class MyCalendar {
+public:
+    vector<pair<int, int>> booked;
+
+    MyCalendar() {
+    }
+
+    bool book(int start, int end) {
+        for (auto &b : booked) {
+            if (max(b.first, start) < min(b.second, end)) {
+                return false;
+            }
+        }
+        booked.push_back({start, end});
+        return true;
+    }
+};
