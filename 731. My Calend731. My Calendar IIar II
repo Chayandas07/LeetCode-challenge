@@ -1,0 +1,38 @@
+class MyCalendarTwo {
+    // map of start->end, each entry represents an interval [start, end)
+    // singleBooked is a superset of double booked, we don't have to worry about the double booked parts of it because we'll early return anyway.
+    std::map<int, int> singleBooked, doubleBooked;
+public:
+
+    MyCalendarTwo() {}
+    
+    bool book(int start, int end) {
+        { // if [start, end) overlaps any double booked interval, we cannot insert.
+            const auto after = doubleBooked.lower_bound(end);
+            if(after != doubleBooked.begin()) {
+                const auto iter = std::prev(after);
+                if(iter->second > start) return false;
+            }
+        }
+
+        // find all intervals that overlap with this one.
+        // for each of those intervals, add the intersection of it and the current one to the doubleBooked interval set.
+        auto iter = singleBooked.upper_bound(start);
+        if(iter != singleBooked.begin() && (std::prev(iter)->second > start)) --iter;
+        const auto startIter = iter; 
+        while(iter != singleBooked.end() && iter->first < end) {
+            doubleBooked[std::max(start, iter->first)] = std::min(end, iter->second);
+            ++iter;
+        }
+        const auto endIter = iter;
+
+        // merge all overlapping intervals in singleBooked into one big interval.
+        int newStart = start;
+        int newEnd = end;
+        if(startIter != singleBooked.end()) newStart = min(start, startIter->first);
+        if(endIter != singleBooked.begin()) newEnd = max(newEnd, std::prev(endIter)->second);
+        const auto afterErase = singleBooked.erase(startIter, endIter);
+        singleBooked.emplace_hint(afterErase, newStart, newEnd);
+        return true;
+    }
+};
