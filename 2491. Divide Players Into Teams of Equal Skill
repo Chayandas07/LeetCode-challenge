@@ -1,0 +1,26 @@
+class Solution {
+public:
+    long long dividePlayers(vector<int>& skill) {
+        
+        long long n = skill.size();
+        sort(skill.begin() , skill.end());
+        vector<long long>a;
+        long long start = 0,end = n-1;
+        long long sum = skill[0] + skill[n-1];
+        long long k = 0;
+        
+        while(start<=end){
+            if((skill[start] + skill[end])!= sum) return -1;
+            a.push_back(skill[start]);
+            a.push_back(skill[end]);
+            start++;end--;k++;
+        }
+        k=0;
+        long long ans = 0;
+        for(long long i = 0 ; i < a.size() ; i+=2){
+            ans+=a[i]*a[i+1];
+            k++;
+        }
+        return ans;
+    }
+};
