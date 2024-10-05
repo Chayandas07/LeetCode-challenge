@@ -1,0 +1,52 @@
+class Solution {
+public:
+    bool check(vector<int>& v1, vector<int>& v2) {
+        // Compare the two frequency arrays
+        for (int i = 0; i < 26; i++) {
+            if (v1[i] != v2[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    bool checkInclusion(string s1, string s2) {
+        // If s1 is longer than s2, it can't be a substring
+        if (s1.size() > s2.size()) {
+            return false;
+        }
+
+        // Frequency count of characters in s1 and initial window of s2
+        vector<int> cs1(26, 0);
+        vector<int> cs2(26, 0);
+        int n1 = s1.size();
+        int n2 = s2.size();
+
+        // Count frequencies in s1 and first window of s2
+        for (int i = 0; i < n1; i++) {
+            cs1[s1[i] - 'a']++;
+            cs2[s2[i] - 'a']++;
+        }
+
+        // Check if the first window is a valid permutation
+        if (check(cs1, cs2)) {
+            return true;
+        }
+
+        // Sliding window over s2
+        for (int i = n1; i < n2; i++) {
+            // Remove the character that goes out of the window
+            cs2[s2[i - n1] - 'a']--;
+            // Add the character that enters the window
+            cs2[s2[i] - 'a']++;
+
+            // Check if the current window is a valid permutation
+            if (check(cs1, cs2)) {
+                return true;
+            }
+        }
+
+        // No valid permutation found
+        return false;
+    }
+};
