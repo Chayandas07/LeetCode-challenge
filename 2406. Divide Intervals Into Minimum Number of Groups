@@ -1,0 +1,18 @@
+class Solution {
+public:
+    int minGroups(vector<vector<int>>& intervals) {
+        vector<int> v(1000002,0);
+        int n = 0;
+        for(auto X: intervals){
+            n = max(n, X[1]);
+            v[X[0]]++;
+            v[X[1]+1]--;
+        }
+        int pfx= 0 , ans = 0;
+        for(int i = 0 ;i <= n; i++){
+            pfx+=v[i];
+            ans = max(ans, pfx);
+        }
+        return ans;
+    }
+};
