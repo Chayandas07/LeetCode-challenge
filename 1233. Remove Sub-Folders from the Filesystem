@@ -1,0 +1,22 @@
+class Solution {
+public:
+    vector<string> removeSubfolders(vector<string>& folder) {
+        vector<string>ans;
+        sort(folder.begin(), folder.end());
+        string prev = "a";     //Random
+
+        for(int i=0; i<folder.size(); ++i){
+            if(folder[i].size()>=prev.size()){
+                if(folder[i].substr(0,prev.size()) != prev || folder[i][prev.size()]!='/'){
+                    ans.push_back(folder[i]);
+                    prev = folder[i];
+                }
+            }
+            else{
+                ans.push_back(folder[i]);
+                prev = folder[i];
+            }
+        }
+        return ans;
+    }
+};
