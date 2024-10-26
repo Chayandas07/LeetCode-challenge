@@ -1,0 +1,48 @@
+class Solution {
+public:
+    vector< pair<int, int> > h = vector<pair<int, int>>(100001, {0, 0});
+    pair<int, int> solve(TreeNode* root, int level){
+        if(root == nullptr) return {0, 0};
+        if(root->left == nullptr && root->right == nullptr){
+            return h[root->val] = {1, level};
+        }
+        //traversing the tree and updating the h vector
+        solve(root->left, level + 1);
+        solve(root->right, level + 1);
+
+        h[root->val] = {max(
+            root->right != nullptr ? h[root->right->val].first : 0,
+            root->left != nullptr ?  h[root->left->val].first : 0
+        ) + 1, level};
+        return h[root->val];
+    }
+    vector<int> treeQueries(TreeNode* root, vector<int>& queries) {
+        solve(root, 0);
+        vector<int> ans;
+        vector<int> v[100000];
+        int longestPath = 0;
+        for(auto x : h){ // filling the v vector while calculating longestPath
+            if(x.second == 0) continue;
+            longestPath = max(longestPath, x.first);
+            v[x.second].push_back(x.first);
+        }
+
+        // Sort to get the longest && the second longest path of each level
+        for(auto &x : v) sort(x.begin(), x.end(), greater<int>());
+        
+        for(auto &q : queries){
+            int node = q;
+            int level = h[node].second;
+            if(h[node].first == v[level][0] && v[level].size() >= 2){
+                q = longestPath - v[level][0] + v[level][1];
+                continue;
+            }else if(h[node].first == v[level][0]){
+                q = longestPath - v[level][0];
+                continue;
+            }
+            q = longestPath;
+        }
+        
+        return queries;
+    }
+};
