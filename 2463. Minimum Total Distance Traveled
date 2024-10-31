@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<vector<long long>> dp;
+
+    long long fn(int i, int j, vector<int>& robot, vector<int>& factory){
+        //i -> robot index
+        //j -> factor index
+
+        if(i >= robot.size()){
+            return 0;
+        }
+
+        if(j >= factory.size()){
+            return LLONG_MAX;
+        }
+
+        if(dp[i][j] != -1) return dp[i][j];
+
+        long long a = fn(i+1, j+1, robot, factory);
+        if(a != LLONG_MAX){
+            a += abs(robot[i] - factory[j]);
+        }
+
+        long long b = fn(i, j+1, robot, factory);
+
+        return dp[i][j] = min(a, b);
+    }
+
+    long long minimumTotalDistance(vector<int>& robot, vector<vector<int>>& factory) {
+        sort(robot.begin(), robot.end());
+        sort(factory.begin(), factory.end());
+
+        vector<int> v;
+        for(auto& fac : factory){
+            while(fac[1]--){
+                v.push_back(fac[0]);
+            }
+        }
+
+        dp.resize(robot.size()+1, vector<long long>(v.size()+1, -1));
+
+        return fn(0, 0, robot, v);
+    }
+};
