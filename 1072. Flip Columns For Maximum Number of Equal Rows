@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int maxEqualRowsAfterFlips(vector<vector<int>>& matrix) {
+        unordered_map<string, int> patternCount;  // To store the pattern and its count
+        
+        for (const auto& row : matrix) {
+            string pattern = "";
+            
+            // Generate a pattern string for this row based on the first row
+            for (int j = 0; j < row.size(); ++j) {
+                // Compare with the first element in the row to determine if flip is needed
+                pattern += (row[j] ^ row[0]) ? '1' : '0';
+            }
+            
+            // Increment the count for this pattern
+            patternCount[pattern]++;
+        }
+        
+        // Find the maximum count of rows with the same pattern
+        int maxRows = 0;
+        for (const auto& entry : patternCount) {
+            maxRows = max(maxRows, entry.second);
+        }
+        
+        return maxRows;
+    }
+};
