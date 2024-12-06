@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxCount(vector<int>& banned, int n, int maxSum) {
+        unordered_map<int, bool> hash;
+        for (auto num: banned) {
+            hash[num] = 1;
+        }
+        int sum = 0, count = 0, i = 1;
+        while (i <= n) {
+            if (!hash[i]) {
+                if (sum + i > maxSum) return count;
+                sum += i;
+                count ++;
+            }
+            i++;
+        }
+        return count;
+    }
+};
