@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int maxTwoEvents(vector<vector<int>>& events) {
+        int n = events.size();
+        sort(events.begin(), events.end());
+        int best = events[n-1][2];
+        map<int,int>mp;
+        mp[events[n-1][0]] = best;
+        for (int i = n - 2; i >= 0; i--) {
+            best = max(events[i][2], best);
+            mp[events[i][0]] = max(mp[events[i][0]], best);
+        }
+        int result = 0;
+        for (int i = 0; i < n; i++) {
+            auto it = mp.upper_bound(events[i][1]);
+            result = max(result, events[i][2]);
+            if (it == mp.end()) 
+                continue;
+            
+            result = max(events[i][2] + (*it).second, result);
+        }
+        return result;
+    }
+};
