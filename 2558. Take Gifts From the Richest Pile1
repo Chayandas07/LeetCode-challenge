@@ -1,0 +1,41 @@
+class Solution1 {
+public:
+    long long pickGifts(vector<int>& gifts, int k) {
+        long long ans=0;
+        for(int i=0;i<k;i++){
+            int m=0;
+            for(int j=1;j<gifts.size();j++) if(gifts[j]>gifts[m]) m=j;
+            int a=gifts[m];
+            // cout<<a<<endl;
+            a=sqrt(a);
+            // cout<<a<<endl;
+            gifts[m]=a;
+        }
+        for(int i : gifts){
+            ans+=i;
+        }
+        return ans;
+    }
+};
+
+class Solution {
+public:
+    long long pickGifts(vector<int>& gifts, int k) {
+        long long ans=0;
+        priority_queue<int> vp;
+        for(int i : gifts) vp.push(i);
+        for(int i=0;i<k;i++){
+            int a=vp.top();
+            vp.pop();
+            // cout<<a<<endl;
+            a=sqrt(a);
+            // cout<<a<<endl;
+            vp.push(a);
+        }
+        while(!vp.empty()){
+            ans+=vp.top();
+            vp.pop();
+        }
+        return ans;
+    }
+};
