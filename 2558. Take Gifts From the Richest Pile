@@ -1,0 +1,27 @@
+class Solution {
+public:
+#define P pair<int,int>
+    vector<int> getFinalState(vector<int>& nums, int k, int multiplier) {
+        priority_queue<P,vector<P>,greater<P>>pq;
+        vector<int>ans(nums.size(),0);
+        for(int i = 0;i<nums.size();i++){
+            pq.push({nums[i],i});
+        }
+        while(k>0){
+            auto n = pq.top();
+            pq.pop();
+            n.first*=multiplier;
+            pq.push({n.first,n.second});
+            k--;
+        }
+        
+        while(!pq.empty()){
+            auto n = pq.top();
+            int idx= n.second;
+            int ele= n.first;
+            ans[idx]=ele;
+            pq.pop();
+        }
+        return ans;
+    }
+};
