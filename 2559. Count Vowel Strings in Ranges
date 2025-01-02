@@ -1,0 +1,30 @@
+class Solution {
+public:
+
+    // to check if the char is vowel or not
+    bool checkvowel(char ch){
+        if(ch=='a'||ch=='e'||ch=='i'||ch=='o'||ch=='u') return true;
+        return false;
+    }
+
+    vector<int> vowelStrings(vector<string>& words, vector<vector<int>>& queries) {
+
+        vector<int>mpp(words.size()); // to store the prefix count of vowels
+        vector<int>ans; // to store the result
+        int cnt=0; // to count string following the constraint
+
+        // filling prefix vec
+        for(int i=0;i<words.size();i++){
+            if(words.at(i).size()==1&&checkvowel(words.at(i)[0])) cnt++;
+            else if(checkvowel(words.at(i)[0])&&checkvowel(words.at(i)[words.at(i).size()-1]))cnt++;
+            mpp[i]=cnt;
+        }
+
+        // using prefix vec to fill the result vec
+        for(int j=0;j<queries.size();j++){
+            if(queries.at(j)[0]==0)ans.push_back(mpp[queries.at(j)[1]]);
+            else ans.push_back(mpp[queries.at(j)[1]]-mpp[queries.at(j)[0]-1]);
+        }
+        return ans;
+    }
+};
