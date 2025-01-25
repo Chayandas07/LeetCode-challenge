@@ -1,0 +1,40 @@
+class Solution {
+public:
+    vector<int> lexicographicallySmallestArray(vector<int>& nums, int limit) {
+        // The Whole intuition was based on the fact that , if the elements are
+        // within range of limit they will after a finite number of operation
+        // sort themselves relatively . So we just sort them and create
+        // different groups And finally using the groups identifier we just
+        // update the final array >>>>
+        vector<int> arr = nums;       // O(N)
+        sort(arr.begin(), arr.end()); // O(NLogN)
+        int gno = 0;
+        unordered_map<int, queue<int>> group; // O(N)
+        map<int, int> connect;
+        connect[arr[0]] = gno;
+        group[gno].push(arr[0]);
+        for (int i = 1; i < nums.size(); i++) { // O(N)
+            if (abs(arr[i] - arr[i - 1]) <= limit) {
+                group[gno].push(arr[i]);
+                connect[arr[i]] = gno;
+            } else {
+                gno++;
+                group[gno].push(arr[i]);
+                connect[arr[i]] = gno;
+            }
+        }
+        for (int i = 0; i < nums.size(); i++) { // O(N)
+            int ele = nums[i];
+            nums[i] = group[connect[nums[i]]].front();
+            group[connect[nums[i]]].pop();
+        }
+        return nums;
+        // Overall Time COmplexity :O(nlogn+n+n)
+        // Overall Space Complexity :O(N)
+
+        // For idetification of groups we can use a higher level data structure
+        // instead map >>>>
+        // For Example DSU can be used to check whether certain is part of the
+        // group or not
+    }
+};
