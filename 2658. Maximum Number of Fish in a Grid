@@ -1,0 +1,40 @@
+class Solution {
+public:
+    int bfs(vector<vector<int>>& grid, int r, int c) {
+        int m = grid.size(), n = grid[0].size();
+        queue<pair<int, int>> q;
+        q.push({r, c});
+        int totalFish = 0;
+        int dr[] = {-1, 0, 0, 1};
+        int dc[] = {0, -1, 1, 0};
+        while (!q.empty()) {
+            int row = q.front().first, col = q.front().second;
+            q.pop();
+            totalFish += grid[row][col];
+            grid[row][col] = 0; 
+            for (int i = 0; i < 4; i++) {
+                int nr = row + dr[i], nc = col + dc[i];
+                if (nr >= 0 && nr < m && nc >= 0 && nc < n && grid[nr][nc] > 0) {
+                    q.push({nr, nc});
+                }
+            }
+        }
+
+        return totalFish;
+    }
+
+    int findMaxFish(vector<vector<int>>& grid) {
+        int m = grid.size(), n = grid[0].size();
+        int maxFish = 0;
+
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] > 0) {
+                    maxFish = max(maxFish, bfs(grid, i, j));
+                }
+            }
+        }
+
+        return maxFish;
+    }
+};
