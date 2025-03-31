@@ -1,0 +1,27 @@
+class Solution {
+public:
+    long long putMarbles(vector<int>& weights, int k) {
+        int n=weights.size();
+        vector<int> auxi; // create some Helping vector that store sum of pair.
+
+        // Compute the sum of adjacent pairs
+        for(int i=0;i<n-1;i++){
+            auxi.push_back(weights[i] + weights[i+1]);
+        }
+        
+        // Sort the pairs
+        sort(auxi.begin(), auxi.end());
+        long long minm=0,maxm=0;
+
+        // Select (k - 1) smallest sums for minSum
+        for(int i=0;i<k-1;i++){
+            minm = minm + auxi[i];
+        }
+
+        // Select (k - 1) largest sums for maxSum
+        for(int i=n-2;i>=n-k;i--){
+            maxm= maxm+ auxi[i];
+        }
+        return maxm-minm;
+    }
+};
