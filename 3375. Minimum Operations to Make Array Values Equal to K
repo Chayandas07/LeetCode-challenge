@@ -1,0 +1,15 @@
+class Solution {
+public:
+    int minOperations(vector<int>& nums, int k) {
+        unordered_map<int, int> hash;
+        int res = 0;
+        for(int i=0; i<nums.size(); i++) {
+            if(nums[i] < k) return -1;
+            if(!hash[nums[i]] && nums[i] != k) {
+                hash[nums[i]] = 1;
+                res++;
+            }
+        }
+        return res;
+    }
+};
