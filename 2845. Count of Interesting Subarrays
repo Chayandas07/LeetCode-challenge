@@ -1,0 +1,17 @@
+class Solution {
+public:
+    long long countInterestingSubarrays(vector<int>& nums, int modulo, int k) {
+        int n = nums.size();
+        unordered_map<int, long long> fre;
+        fre[0]=1;
+        long long ans =0;
+        int cnt =0;
+        for(int r=0; r<n; r++){
+            if(nums[r]%modulo==k) cnt++;
+            ans+=fre[((cnt%modulo - k)+modulo)%modulo];
+            fre[cnt%modulo]++;
+        }
+        return ans;
+        
+    }
+};
