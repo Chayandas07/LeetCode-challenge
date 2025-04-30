@@ -1,0 +1,10 @@
+class Solution {
+public:
+    int findNumbers(vector<int>& nums) {
+        int ans = 0;
+        for(auto &x : nums){
+            ans += to_string(x).size() & 1 ? 0 : 1;
+        }
+        return ans;
+    }
+};
