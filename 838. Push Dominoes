@@ -1,0 +1,48 @@
+class Solution {
+public:
+    string pushDominoes(string dominoes) {
+        string ans = dominoes;
+        vector<int> dist(dominoes.size(), 0);
+        
+        int latestr = -1; // last index of 'R'
+        char last = '.';  // last force seen
+
+        // First pass: handle 'R' forces from left to right
+        for (int i = 0; i < dominoes.size(); i++) {
+            if (dominoes[i] == 'R') {
+                latestr = i;
+                last = 'R';
+            } else if (dominoes[i] == '.' && latestr != -1 && last == 'R') {
+                dist[i] = abs(latestr - i);
+                ans[i] = 'R';
+            } else {
+                last = 'L'; // force blocked by L
+            }
+        }
+
+        last = '.';
+        int latestl = dominoes.size(); // last index of 'L'
+        int d = 0;
+
+        // Second pass: handle 'L' forces from right to left
+        for (int i = dominoes.size() - 1; i >= 0; i--) {
+            if (dist[i] == -1) continue; // skip already pushed by 'R'
+
+            if (dominoes[i] == 'L') {
+                latestl = i;
+                last = 'L';
+            } else if (dominoes[i] == '.' && last == 'L') {
+                d = abs(latestl - i);
+                if (dist[i] == 0 || d < dist[i]) {
+                    ans[i] = 'L';
+                } else if (d == dist[i]) {
+                    ans[i] = '.'; // equal push from both sides
+                }
+            } else {
+                last = 'R'; // force blocked by R
+            }
+        }
+
+        return ans;
+    }
+};
