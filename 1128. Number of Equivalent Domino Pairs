@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int numEquivDominoPairs(vector<vector<int>>& dominoes) {
+        int n = dominoes.size();
+        map<vector<int>, int> m;
+        for(int i = 0; i < n; i++) {
+            sort(dominoes[i].begin(), dominoes[i].end());
+            m[dominoes[i]]++;
+        }
+        int sum = 0;
+        for(auto i : m) {
+            int count = i.second;
+            if(count > 1) {
+                sum += (count * (count - 1)) / 2;
+            }
+        }
+        return sum;
+    }
+};
