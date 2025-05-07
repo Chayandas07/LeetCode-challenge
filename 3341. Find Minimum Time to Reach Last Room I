@@ -1,0 +1,38 @@
+class Solution {
+public:
+    #define p vector<int>
+    int minTimeToReach(vector<vector<int>>& moveTime) {
+        priority_queue<p,vector<p>,greater<p>> pq;
+        int m=moveTime.size(),n=moveTime[0].size();
+        vector<vector<int>> v(m,vector<int>(n,INT_MAX));
+        v[0][0]=0;
+        pq.push({0,0,0});
+        while(true){
+            int i=pq.top()[1],j=pq.top()[2];
+            if(i==m-1 && j==n-1)
+                break;
+            pq.pop();
+            if(i+1<m && v[i+1][j]==INT_MAX){
+                int maxi=max(v[i][j]+1,moveTime[i+1][j]+1);
+                v[i+1][j]=maxi;
+                pq.push({maxi,i+1,j});
+            }
+            if(i-1>=0 && v[i-1][j]==INT_MAX){
+                int  maxi=max(v[i][j]+1,moveTime[i-1][j]+1);
+                v[i-1][j]=maxi;
+                pq.push({maxi,i-1,j});
+            }
+            if(j+1<n && v[i][j+1]==INT_MAX){
+                int maxi=max(v[i][j]+1,moveTime[i][j+1]+1);
+                v[i][j+1]=maxi;
+                pq.push({maxi,i,j+1});
+            }
+            if(j-1>=0 && v[i][j-1]==INT_MAX){
+                int maxi=max(v[i][j]+1,moveTime[i][j-1]+1);
+                v[i][j-1]=maxi;
+                pq.push({maxi,i,j-1});
+            }
+        }
+        return v[m-1][n-1];
+    }
+};
