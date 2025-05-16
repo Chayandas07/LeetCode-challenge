@@ -1,0 +1,41 @@
+class Solution {
+public:
+    bool hammingCheck(string s1,string s2){
+        if(s1.size()!=s2.size())return false;
+        int n=s1.size();
+        int diff=0;
+        for(int i=0;i<n;i++){
+            diff+=s1[i]!=s2[i];
+            if(diff>1)return false;
+        }
+        return true;
+    }
+    vector<string> getWordsInLongestSubsequence(vector<string>& words, vector<int>& groups) {
+        int n=words.size();
+        vector<int> dp(n,1);
+        vector<int> prev(n);
+        for(int i=0;i<n;i++){
+            prev[i]=i;
+        }
+        int maxIdx=0;
+        for(int i=0;i<n;i++){
+            for(int j=0;j<i;j++){
+                if((hammingCheck(words[i],words[j]) && groups[i]!=groups[j]) && dp[j]+1>dp[i]){
+                    dp[i]=dp[j]+1;
+                    prev[i]=j;
+                }
+            }
+            if(dp[i]>dp[maxIdx]){
+                maxIdx=i;
+            }
+        }
+        vector<string> ans;
+        while(prev[maxIdx]!=maxIdx){
+            ans.push_back(words[maxIdx]);
+            maxIdx = prev[maxIdx];
+        }
+        ans.push_back(words[maxIdx]);
+        reverse(ans.begin(),ans.end());
+        return ans;
+    }
+};
