@@ -1,0 +1,24 @@
+class Solution {
+public:
+    bool isZeroArray(vector<int>& nums, vector<vector<int>>& queries) {
+        int n=nums.size();
+        int m=queries.size();
+        vector<int>diff(n+1,0);
+
+        for(int i=0;i<m;i++){
+            int st=queries[i][0];
+            int end=queries[i][1];
+
+            diff[st]-=1;
+            diff[end+1]+=1;
+        }
+        int com=0;
+        for(int i=0;i<n;i++){
+            com+=diff[i];
+            if(com+nums[i]>0){
+                return false;
+            }
+        }
+        return true;
+    }
+};
