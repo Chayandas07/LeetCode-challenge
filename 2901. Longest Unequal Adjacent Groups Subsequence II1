@@ -1,0 +1,29 @@
+class Solution {
+public:
+    void setZeroes(vector<vector<int>>& matrix) {
+        vector<int> iV;
+        vector<int> jV;
+        int n = matrix.size();
+        int m = matrix[0].size();
+        for(int i=0;i<n;i++){
+            for(int j=0;j<m;j++){
+                if(matrix[i][j]==0){
+                    iV.push_back(i);
+                    jV.push_back(j);
+                }
+            }
+        }
+        
+        for(int i=0;i<iV.size();i++){
+            for(int j=0;j<m;j++){
+                matrix[iV[i]][j]=0;
+            }
+        }
+        
+        for(int j=0;j<jV.size();j++){
+            for(int i=0;i<n;i++){
+                matrix[i][jV[j]]=0;
+            }
+        }
+    }
+};
