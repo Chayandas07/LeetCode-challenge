@@ -1,0 +1,54 @@
+class Solution {
+
+    int dfs(int u, int par, vector<int> *adj, int k) {
+
+        if(k < 0) {
+            return 0;
+        }
+
+        int res = 1;
+        for(auto v: adj[u]) {
+
+            if(v == par) continue;
+
+            res += dfs(v, u, adj, k - 1);
+        }
+
+        return res;
+    }
+public:
+    vector<int> maxTargetNodes(vector<vector<int>>& edges1, vector<vector<int>>& edges2, int k) {
+
+        int n = edges1.size() + 1;
+        int m = edges2.size() + 1;
+
+        vector<int> adj1[n + 1];
+        vector<int> adj2[m + 1];
+
+        for(const auto &edge1: edges1) {
+            adj1[edge1[0]].push_back(edge1[1]);
+            adj1[edge1[1]].push_back(edge1[0]);
+        }
+
+        for(const auto &edge2: edges2) {
+            adj2[edge2[0]].push_back(edge2[1]);
+            adj2[edge2[1]].push_back(edge2[0]);
+        }
+
+        vector<int> cnt1(n, 0);
+        vector<int> cnt2(m, 0);
+
+        int mx2 = 0;
+        for(int i = 0; i < m; i++) {
+            cnt2[i] = dfs(i, - 1, adj2, k - 1);
+            mx2 = max(mx2, cnt2[i]);
+        }
+
+        for(int i = 0; i < n; i++) {
+            cnt1[i] = dfs(i, - 1, adj1, k) + mx2;
+            
+        }
+
+        return cnt1;
+    } 
+};
