@@ -1,0 +1,43 @@
+class Solution {
+public:
+    bool find(int target,vector<int>&arr){
+        int l = 0;
+        int r = arr.size()-1;
+        int ans = -1;
+        while(l<=r){
+            int mid = l + (r-l)/2;
+            if(arr[mid]==target){
+                return true;
+            }
+            else if(arr[mid]<target){
+                l = mid + 1;
+            }
+            else{
+                r = mid - 1;
+            }
+        }
+        return false;
+    }
+    string clearStars(string s) {
+        map<char,vector<int>>mp;
+        for(int i=0;i<s.length();i++){
+            if(s[i]!='*'){
+                mp[s[i]].push_back(i);
+            }
+            if(s[i]=='*'){
+                char ch = mp.begin()->first;
+                mp[ch].pop_back();
+                if(mp[ch].size()==0){
+                    mp.erase(ch);
+                }
+            }
+        }
+        string ans = "";
+        for(int i=0;i<s.length();i++){
+            if(find(i,mp[s[i]])){
+                ans.push_back(s[i]);
+            }
+        }
+        return ans;
+    }
+};
