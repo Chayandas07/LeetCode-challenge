@@ -1,0 +1,28 @@
+class Solution {
+public:
+    int minMaxDifference(int num) {
+        string s = to_string(num);
+
+        string s_max = s;
+        for (char c : s) {
+            if (c != '9') {
+                for (char &ch : s_max) {
+                    if (ch == c) ch = '9';
+                }
+                break;
+            }
+        }
+
+        string s_min = s;
+        for (char c : s) {
+            if (c != '0') {
+                for (char &ch : s_min) {
+                    if (ch == c) ch = '0';
+                }
+                break;
+            }
+        }
+
+        return stoi(s_max) - stoi(s_min);
+    }
+};
