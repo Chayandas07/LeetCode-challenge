@@ -1,0 +1,53 @@
+class Solution {
+public:
+    long long kMirror(int k, int n) {
+        long long sum = 0;
+        
+        for (int len = 1; n > 0; ++len) {
+            int halfLen = (len + 1) / 2;
+            long long start = (len == 1) ? 1 : pow10(halfLen - 1);
+            long long end = pow10(halfLen);
+
+            for (long long i = start; i < end && n > 0; ++i) {
+                long long pal = generatePalindrome(i, len % 2 == 1);
+                if (isPalindromeInBase(pal, k)) {
+                    sum += pal;
+                    n--;
+                }
+            }
+        }
+
+        return sum;
+    }
+
+    // Generate full decimal palindrome from half (mirrored)
+    long long generatePalindrome(long long half, bool oddLength) {
+        long long res = half;
+        if (oddLength) half /= 10;
+        while (half > 0) {
+            res = res * 10 + (half % 10);
+            half /= 10;
+        }
+        return res;
+    }
+
+    // Check if number is palindrome in base k
+    bool isPalindromeInBase(long long num, int base) {
+        vector<int> digits;
+        while (num > 0) {
+            digits.push_back(num % base);
+            num /= base;
+        }
+        for (int i = 0, j = digits.size() - 1; i < j; ++i, --j) {
+            if (digits[i] != digits[j]) return false;
+        }
+        return true;
+    }
+
+    // Avoid pow usage with int return
+    long long pow10(int exp) {
+        long long res = 1;
+        while (exp--) res *= 10;
+        return res;
+    }
+};
