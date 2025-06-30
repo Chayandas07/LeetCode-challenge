@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int findLHS(vector<int>& nums) {
+        // Count frequency of each number using hash map
+        unordered_map<int, int> freq;
+        for (int num : nums) {
+            freq[num]++;
+        }
+        
+        int maxLength = 0;
+        
+        // For each unique number, check if num+1 exists
+        for (auto& pair : freq) {
+            int currentNum = pair.first;
+            int currentCount = pair.second;
+            
+            // Check if currentNum + 1 exists in the map
+            if (freq.find(currentNum + 1) != freq.end()) {
+                // Calculate harmonious subsequence length using currentNum and currentNum+1
+                int harmoniousLength = currentCount + freq[currentNum + 1];
+                maxLength = max(maxLength, harmoniousLength);
+            }
+        }
+        
+        return maxLength;
+    }
+};
