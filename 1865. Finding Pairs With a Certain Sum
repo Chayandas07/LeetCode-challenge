@@ -1,0 +1,60 @@
+class FindSumPairs {
+private:
+    vector<int> nums1;              // Store nums1 as-is (never changes)
+    vector<int> nums2;              // Store nums2 for index-based updates
+    unordered_map<int, int> freq;   // Frequency map for nums2 values
+    
+public:
+    FindSumPairs(vector<int>& nums1, vector<int>& nums2) {
+        // Store both arrays
+        this->nums1 = nums1;
+        this->nums2 = nums2;
+        
+        // Build frequency map for nums2
+        // This helps us quickly find how many times each value appears
+        for (int num : nums2) {
+            freq[num]++;
+        }
+    }
+    
+    void add(int index, int val) {
+        // Get the old value at this index
+        int oldVal = nums2[index];
+        
+        // Decrease frequency of old value
+        freq[oldVal]--;
+        if (freq[oldVal] == 0) {
+            freq.erase(oldVal);  // Remove if frequency becomes 0
+        }
+        
+        // Update nums2 with new value
+        nums2[index] += val;
+        int newVal = nums2[index];
+        
+        // Increase frequency of new value
+        freq[newVal]++;
+    }
+    
+    int count(int tot) {
+        int pairCount = 0;
+        
+        // For each element in nums1, find its complement in nums2
+        for (int num1 : nums1) {
+            int complement = tot - num1;  // What we need from nums2
+            
+            // If complement exists in nums2, add its frequency to our count
+            if (freq.find(complement) != freq.end()) {
+                pairCount += freq[complement];
+            }
+        }
+        
+        return pairCount;
+    }
+};
+
+/**
+ * Your FindSumPairs object will be instantiated and called as such:
+ * FindSumPairs* obj = new FindSumPairs(nums1, nums2);
+ * obj->add(index,val);
+ * int param_2 = obj->count(tot);
+ */
