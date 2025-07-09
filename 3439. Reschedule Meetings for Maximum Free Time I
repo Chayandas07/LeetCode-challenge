@@ -1,0 +1,35 @@
+class Solution {
+public:
+    int maxFreeTime(int eventt, int k, vector<int>& strtt, vector<int>& endt) {
+        int n = strtt.size();
+        vector<int> gaps(n+1, 0);
+
+        gaps[0] = strtt[0];
+        for(int i=1; i<n; i++){
+            gaps[i] = strtt[i] - endt[i-1];
+        }
+        gaps[n] = eventt - endt[n-1];
+
+        for(int ele:gaps) cout<<ele<<" ";
+
+        int tmp = 0;
+        int j=0;
+        while(j<=k){
+            tmp += gaps[j];
+            j++;
+        }
+
+        int ans = tmp;
+        int i=0;
+        while(j<=n && i<=n){
+            tmp -= gaps[i];
+            i++;
+            tmp += gaps[j];
+            j++;
+            ans = max(ans, tmp);
+        }
+
+        return ans;
+
+    }
+};
