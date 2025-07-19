@@ -1,0 +1,32 @@
+class Solution {
+public:
+    vector<string> removeSubfolders(vector<string>& folder) {
+        // Sort all folders lexicographically
+        // This ensures parent folders come before their subfolders
+        sort(folder.begin(), folder.end());
+        
+        vector<string> result;
+        
+        // Add the first folder - it can't be a subfolder of anything
+        result.push_back(folder[0]);
+        
+        // Check each folder starting from the second one
+        for(int i = 1; i < folder.size(); i++) {
+            // Get the last folder we added to result
+            string lastFolder = result.back();
+            
+            // Add "/" to ensure we're checking for actual subfolders
+            // This prevents "/a" from being considered a parent of "/ab"
+            lastFolder += "/";
+            
+            // Check if current folder starts with the last added folder
+            // If it doesn't start with lastFolder, it's not a subfolder
+            if(folder[i].substr(0, lastFolder.length()) != lastFolder) {
+                result.push_back(folder[i]);
+            }
+            // If it does start with lastFolder, it's a subfolder, so skip it
+        }
+        
+        return result;
+    }
+};
