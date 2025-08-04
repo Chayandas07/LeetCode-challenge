@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int totalFruit(vector<int>& fruits) {
+        int windowstart = 0 ; 
+        int maxfruits = 0 ; 
+        unordered_map<int,int>fruitfrequency;
+
+        for(int windowend = 0 ; windowend<fruits.size();windowend++){
+            fruitfrequency[fruits[windowend]]++;
+
+        
+        while(fruitfrequency.size()>2){
+            fruitfrequency[fruits[windowstart]]--;
+
+            if( fruitfrequency[fruits[windowstart]]==0 ){
+                fruitfrequency.erase(fruits[windowstart]);
+
+            }
+
+            windowstart++;
+        }
+            maxfruits = max(maxfruits , windowend - windowstart +1 );
+        }
+        return maxfruits;
+    }
+    
+};
