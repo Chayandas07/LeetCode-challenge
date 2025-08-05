@@ -1,0 +1,59 @@
+class Solution {
+    
+    vector<int> tree;
+    vector<int> baskets;
+
+    void build(int node, int b, int e) {
+        
+        if(b == e) { //leaf node
+            tree[node] = baskets[b];
+            return;
+        }
+
+        int mid = (b + e) / 2;
+        int left = node * 2;
+        int right = left + 1;
+        build(left, b, mid);
+        build(right, mid + 1, e);
+        tree[node] = max(tree[left], tree[right]);
+    }
+
+    void update(int node, int b, int e, int fruit) {
+        
+        if(b == e) { //leaf node. this is the basket we used
+            tree[node] = 0;
+            return;
+        }
+
+        int left = node * 2;
+        int right = left + 1;
+        int mid = (b + e) / 2;
+        if(tree[left] >= fruit) { //if there is a suitable basket in the left segment use that
+            update(left, b, mid, fruit);
+        } else { //otherwise there must be a suitable basket in the right segment. use that
+            update(right, mid + 1, e, fruit);
+        }
+        tree[node] = max(tree[left], tree[right]);
+    }
+
+public:
+    int numOfUnplacedFruits(vector<int>& fruits, vector<int>& _baskets) {
+        
+        baskets = _baskets;
+        int n = baskets.size(), ans = 0;
+        tree.resize(n * 4);
+        build(1, 0, n - 1); //initialize the max segment tree
+        for(auto &fruit : fruits) {
+            if(tree[1] < fruit) {
+                //the max capacity basket can't hold the fruit
+                ans++;
+            } else {
+                //there is at least one basket, which can hold the fruit
+                //since we used one of the basket, update the segment tree
+                update(1, 0, n - 1, fruit);
+            }
+        }
+
+        return ans;
+    }
+};
