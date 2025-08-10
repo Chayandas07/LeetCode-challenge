@@ -1,0 +1,15 @@
+class Solution {
+public:
+    bool reorderedPowerOf2(int n) {
+        string str = to_string(n);
+        sort(str.begin(),str.end());
+
+        for (int i=0;i<31;i++){
+            int x = pow(2,i);
+            string ss = to_string(x);
+            sort(ss.begin(),ss.end());
+            if(str==ss) return 1;
+        }
+        return 0;
+    }
+};
