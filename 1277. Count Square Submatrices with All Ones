@@ -1,0 +1,30 @@
+class Solution {
+public:
+    int countSquares(vector<vector<int>>& matrix) {
+        int rows = matrix.size();
+        int cols = matrix[0].size();
+        std::vector<std::vector<int>> dp(rows, std::vector<int>(cols, 0));
+        int cnt = 0;
+        for (int j = 0; j < cols; j++){
+            if (matrix[0][j] == 1){
+                dp[0][j] = 1;
+                cnt += dp[0][j];
+            }
+        }
+        for (int i = 1; i < rows; i++){
+            if (matrix[i][0] == 1){
+                dp[i][0] = 1;
+                cnt += dp[i][0];
+            }
+        }
+        for (int i = 1; i < rows; i++){
+            for (int j = 1; j < cols; j++){
+                if (matrix[i][j] == 1){
+                    dp[i][j] = std::min({dp[i-1][j], dp[i-1][j-1], dp[i][j-1]}) + 1;
+                    cnt += dp[i][j];
+                }
+            }
+        }
+        return cnt;
+    }
+};
