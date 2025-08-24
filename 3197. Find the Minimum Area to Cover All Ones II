@@ -1,0 +1,89 @@
+class Solution {
+public:
+    vector<vector<int>> rotateClockwise(vector<vector<int>>& grid){   //to rotate the matrix
+        int m = grid.size(); 
+        int n = grid[0].size();
+
+        vector<vector<int>> rotatedGrid(n, vector<int>(m));
+            for(int i = 0; i<m; i++){
+                for(int j = 0; j<n; j++){
+                    rotatedGrid[j][m - i - 1] = grid[i][j];
+                }
+            }
+        return rotatedGrid;
+    }
+
+
+
+    int minArea(int startRow, int endRow, int startCol, int endCol, vector<vector<int>>& grid) {    //find min area that contains all ones
+        int m = grid.size();
+        int n = grid[0].size();
+
+        int maxRow = 0;
+        int maxCol = 0;
+        int minRow = m - 1;
+        int minCol = n - 1;
+
+        for(int i = startRow; i<endRow; i++){
+            for(int j = startCol; j<endCol; j++){
+                if(grid[i][j] == 1){
+                    maxRow = max(maxRow, i);
+                    maxCol = max(maxCol, j);
+                    minRow = min(minRow, i);
+                    minCol = min(minCol, j);
+                }
+            }
+        }
+        return (maxRow - minRow + 1) * (maxCol - minCol + 1);
+
+    }
+
+
+
+    int helper(vector<vector<int>>& grid){  //solving the first three cases
+        int m = grid.size();
+        int n = grid[0].size();
+
+        int result = INT_MAX;
+
+        for(int rs = 1; rs<m; rs++){  //rs -- row splitter
+            for(int cs = 1; cs<n; cs++){ // cs -- column splitter
+                int top = minArea(0, rs, 0, n, grid);
+                int bottomLeft = minArea(rs, m, 0, cs, grid);
+                int bottomRight = minArea(rs, m, cs, n, grid);
+
+                result = min(result, top + bottomLeft + bottomRight);
+
+                int topLeft = minArea(0, rs, 0, cs, grid);
+                int topRight = minArea(0, rs, cs, n, grid);
+                int bottom = minArea(rs, m, 0, n, grid);
+
+                result = min(result, topLeft + topRight + bottom);
+
+            }
+        }
+
+        for(int rs1 = 1; rs1<m; rs1++){
+            for(int rs2 = rs1 + 1; rs2<m; rs2++){
+                int top = minArea(0, rs1, 0, n, grid);
+                int middle = minArea(rs1, rs2, 0 , n, grid);
+                int bottom = minArea(rs2, m, 0, n, grid);
+
+                result = min(result, top + middle + bottom);
+            }
+        }
+        return result;
+    }
+
+
+
+    int minimumSum(vector<vector<int>>& grid) {
+        int result = helper(grid);
+
+        vector<vector<int>> rotatedGrid = rotateClockwise(grid);
+
+        result = min(result, helper(rotatedGrid));
+ 
+        return result;
+    }
+};
