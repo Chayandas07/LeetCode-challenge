@@ -1,0 +1,35 @@
+class Solution {
+public:
+
+    void solve(int i, int j, vector<vector<int>>&grid, vector<int>&ds){
+        if(i==grid.size() || j==grid[0].size()) return;
+        int val=grid[i][j];
+        ds.push_back(val);
+        solve(i+1,j+1,grid,ds);
+        return;
+    }
+    void agn(int i, int j, vector<vector<int>>&grid, vector<int>&ds){
+        if(i==grid.size() || j==grid[0].size() || ds.empty()) return;
+        int val=ds.back();
+        ds.pop_back();
+        grid[i][j]=val;
+        agn(i+1,j+1,grid,ds);
+        return;
+    }
+    vector<vector<int>> sortMatrix(vector<vector<int>>& grid) {
+        int n=grid.size(), m=grid[0].size();
+        for(int i=1;i<m;i++){
+            vector<int>ds;
+            solve(0,i,grid,ds);
+            sort(ds.rbegin(),ds.rend());
+            agn(0,i,grid,ds);
+        }
+        for(int i=0;i<n;i++){
+            vector<int>ds;
+            solve(i,0,grid,ds);
+            sort(ds.begin(),ds.end());
+            agn(i,0,grid,ds);
+        }
+        return grid;
+    }
+};
