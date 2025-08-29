@@ -1,0 +1,12 @@
+class Solution {
+public:
+    long long flowerGame(int n, int m) {
+        long long ne=n/2;
+        long long me=m/2;
+        long long no=n-ne;
+        long long mo=m-me;
+
+        long long ans=mo*ne+no*me;
+        return ans;
+    }
+};
