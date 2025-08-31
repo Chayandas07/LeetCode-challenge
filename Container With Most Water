@@ -1,0 +1,22 @@
+class Solution {
+  public:
+    int maxWater(vector<int> &arr) {
+        // code here
+         int i=0;
+         int j= arr.size()-1;
+         int maxi= 0;
+         while(i<j){
+             if(arr[i]<arr[j]){
+                 int num= j-i;
+                 maxi= max(maxi, num*arr[i]);
+                 i++;
+             }
+             else{
+                 int num= j-i;
+                 maxi= max(maxi, num*arr[j]);
+                 j--;
+             }
+         }
+         return maxi;
+    }
+};
