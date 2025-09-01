@@ -1,0 +1,62 @@
+class Solution {
+  public:
+    int sumOfModes(vector<int>& arr, int k) {
+        // code here
+        int n = arr.size();
+
+        //map to count frequency of each number
+          unordered_map<int, int> mp;
+
+          //to hold frequency and all elements with that frequence
+          map<int, set<int>> mp2;
+
+          long long ans = 0;
+
+          // precompute the first window
+          for (int i = 0; i < k; i++) {
+              int el = arr[i];
+
+              //always erase element i from it's previous frequency
+              //and erase it's previous frequency if there is no remaining
+              //element with that frequency
+              if (mp.count(el)) {
+                  mp2[-mp[el]].erase(el);
+                  if (mp2[-mp[el]].size() == 0) mp2.erase(-mp[el]);
+              }
+
+              mp[el]++;
+              mp2[-mp[el]].insert(el);
+          }
+
+          ans = abs(*mp2.begin()->second.begin());
+
+          // compute the next window
+          for (int i = k; i < n; i++) {
+              int el = arr[i];
+
+              if (mp[el] > 0) {
+                  mp2[-mp[el]].erase(el);
+                  if (mp2[-mp[el]].size() == 0) mp2.erase(-mp[el]);
+              }
+
+              mp[el]++;
+
+              mp2[-mp[el]].insert(el);
+
+              int oldEl = arr[i - k];
+
+              mp2[-mp[oldEl]].erase(oldEl);
+
+              if (mp2[-mp[oldEl]].size() == 0) mp2.erase(-mp[oldEl]);
+
+              mp[oldEl]--;
+
+              if (mp[oldEl] > 0) mp2[-mp[oldEl]].insert(oldEl);
+
+              int _min = *mp2.begin()->second.begin();
+              ans += abs(_min);
+          }
+
+          return ans;
+    }
+};
