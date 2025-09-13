@@ -1,0 +1,19 @@
+class Solution {
+public:
+    int maxFreqSum(string s) {
+        int n = s.size();
+        int hash[26] = {0};
+        for(int i =0;i<n;i++){
+            hash[s[i]-'a']++;
+        }
+        int vmax=0,cmax=0;
+        for(int i =0;i<26;i++){
+            if(i == 0 || i == 4 || i == 8 || i == 14 || i == 20){
+                vmax = max(vmax,hash[i]);
+            }else{
+                cmax = max(cmax,hash[i]);
+            }
+        }
+        return vmax + cmax;
+    }
+};
