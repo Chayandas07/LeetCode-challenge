@@ -1,0 +1,40 @@
+#include <bits/stdc++.h>
+using namespace std;
+
+class Solution {
+public:
+    vector<int> replaceNonCoprimes(vector<int>& nums) {
+        vector<int> stack;
+
+        for (int num : nums) {
+            stack.push_back(num);
+
+            // Merge while top two are non-coprime
+            while (stack.size() > 1) {
+                int a = stack.back(); stack.pop_back();
+                int b = stack.back(); stack.pop_back();
+                int g = gcd(a, b);
+
+                if (g > 1) {
+                    long long l = (1LL * a / g) * b; // lcm
+                    stack.push_back((int)l);
+                } else {
+                    stack.push_back(b);
+                    stack.push_back(a);
+                    break;
+                }
+            }
+        }
+        return stack;
+    }
+
+private:
+    int gcd(int a, int b) {
+        while (b != 0) {
+            int temp = b;
+            b = a % b;
+            a = temp;
+        }
+        return a;
+    }
+};
