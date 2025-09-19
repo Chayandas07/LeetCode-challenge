@@ -1,0 +1,43 @@
+class Spreadsheet {
+public:
+    using int2=pair<short, char>;
+    int A[1000][26];
+    int rows;
+    Spreadsheet(int rows) : rows(rows) {
+        memset(A, 0, rows*26*sizeof(int));
+    }
+
+    int2 idx(const string& cell){
+        char col=cell[0]-'A';
+        short row=stoi(cell.substr(1))-1;
+        return {row, col};
+    }
+    void setCell(const string& cell, int value) {
+        A[idx(cell).first][idx(cell).second]=value;
+    }
+    
+    void resetCell(const string& cell) {
+        A[idx(cell).first][idx(cell).second]=0;
+    }
+    
+    int getValue(const string& formula) {
+        int m=formula.find('+');
+        int x, y;
+        const string xx=formula.substr(1, m-1), yy=formula.substr(m+1);
+        if (formula[1]>='A') 
+            x=A[idx(xx).first][idx(xx).second];
+        else x=stoi(xx);
+        if (formula[m+1]>='A') 
+            y=A[idx(yy).first][idx(yy).second];
+        else y=stoi(yy);
+        return x+y;
+    }
+};
+
+/**
+ * Your Spreadsheet object will be instantiated and called as such:
+ * Spreadsheet* obj = new Spreadsheet(rows);
+ * obj->setCell(cell,value);
+ * obj->resetCell(cell);
+ * int param_3 = obj->getValue(formula);
+ */
