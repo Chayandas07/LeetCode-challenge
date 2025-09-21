@@ -1,0 +1,78 @@
+struct unrentedComparator {
+    bool operator()(const pair<int,int>& p1,const pair<int,int>& p2) const {
+        if(p1.second==p2.second){
+            return p1.first<p2.first;
+        }
+        return p1.second<p2.second;
+    }
+};
+
+struct rentedComparator {
+    bool operator()(const tuple<int,int,int>& t1,const tuple<int,int,int>& t2) const {
+        // tuple = {price, shop, movie}
+        if(get<0>(t1)==get<0>(t2)){
+            if(get<1>(t1)==get<1>(t2)){
+                return get<2>(t1)<get<2>(t2);
+            }
+            return get<1>(t1)<get<1>(t2);
+        }
+        return get<0>(t1)<get<0>(t2);
+    }
+};
+
+class MovieRentingSystem {
+    // movie -> set of {shop, price}, sorted by (price, shop)
+    unordered_map<int,set<pair<int,int>,unrentedComparator>> unrentedMovie;
+
+    // rented movies = set of {price, shop, movie}
+    set<tuple<int,int,int>,rentedComparator> rentedMovie;
+
+    unordered_map<string,int> priceMap; // "movie_shop" -> price
+
+    string getId(int movie,int shop){
+        return to_string(movie)+"_"+to_string(shop);
+    }
+
+public:
+    MovieRentingSystem(int n, vector<vector<int>>& entries) {
+        for(auto &e: entries){
+            int shop=e[0], movie=e[1], price=e[2];
+            unrentedMovie[movie].insert({shop,price});
+            string id=getId(movie,shop);
+            priceMap[id]=price;
+        }
+    }
+    
+    vector<int> search(int movie) {
+        vector<int> shops;
+        if(unrentedMovie.find(movie)==unrentedMovie.end()){
+            return shops;
+        }
+        for(auto [shop,price]: unrentedMovie[movie]){
+            shops.push_back(shop);
+            if(shops.size()==5) break;
+        }
+        return shops;
+    }
+    
+    void rent(int shop, int movie) {
+        int price=priceMap[getId(movie,shop)];
+        unrentedMovie[movie].erase({shop,price});
+        rentedMovie.insert({price,shop,movie});
+    }
+    
+    void drop(int shop, int movie) {
+        int price=priceMap[getId(movie,shop)];
+        rentedMovie.erase({price,shop,movie});
+        unrentedMovie[movie].insert({shop,price});
+    }
+    
+    vector<vector<int>> report() {
+        vector<vector<int>> reportResult;
+        for(auto &[price,shop,movie]: rentedMovie){
+            reportResult.push_back({shop,movie});
+            if(reportResult.size()==5) break;
+        }
+        return reportResult;
+    }
+};
