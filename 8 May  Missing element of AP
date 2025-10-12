@@ -1,0 +1,29 @@
+class Solution {
+  public:
+
+    int findMissing(vector<int> &arr) {
+        // code here
+        int diff=arr[1]-arr[0];
+        
+        if(diff>0){
+        for(int i=1;i<arr.size()-1;i++)
+        {
+            int d=arr[i+1]-arr[i];
+            if(d==diff) continue;
+            if(diff>d) return arr[i]-d;
+            else if(diff<d) return arr[i]+diff;
+        }
+        }
+        else{
+            for(int i=1;i<arr.size()-1;i++)
+           {
+            int d=arr[i+1]-arr[i];
+            if(d==diff) continue;
+            if(diff<d) return arr[i]-d;
+            else if(diff>d) return arr[i]+diff;
+           }
+            
+        }
+        return *(arr.end()-1)+diff ;
+    }
+};
