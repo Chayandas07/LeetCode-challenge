@@ -1,0 +1,55 @@
+class Solution {
+public:
+    string findLexSmallestString(const string& s, int a, int b) {
+        int n = s.size();
+
+        // Precompute minimal addition steps for each digit
+        vector<int> bestAdd(10);
+        for (int d = 1; d < 10; d++) {
+            int minVal = d, minStep = 0;
+            for (int step = 1; step < 10; step++) {
+                int newVal = (d + a * step) % 10;
+                if (newVal < minVal) {
+                    minVal = newVal;
+                    minStep = step;
+                }
+            }
+            bestAdd[d] = minStep;
+        }
+
+        // Determine rotation cycle positions reachable by repeatedly rotating
+        // by b
+        vector<char> visited(n);
+        int idx = 0;
+        while (!visited[idx]) {
+            visited[idx] = 1;
+            idx = (idx + b) % n;
+        }
+
+        string answer = s;
+
+        // For each unique rotation
+        for (int start = 0; start < n; start++) {
+            if (!visited[start])
+                continue;
+
+            string rotated = s;
+            rotate(rotated.begin(), rotated.begin() + start, rotated.end());
+
+            // Compute how many times to apply 'add a' on odd/even positions
+            vector<int> addCount = {(b % 2) ? bestAdd[rotated[0] - '0'] : 0,
+                                    bestAdd[rotated[1] - '0']};
+
+            // Apply the addition operation accordingly
+            for (int j = 0; j < n; j++) {
+                int digit = rotated[j] - '0';
+                digit = (digit + addCount[j % 2] * a) % 10;
+                rotated[j] = static_cast<char>('0' + digit);
+            }
+
+            answer = min(answer, rotated);
+        }
+
+        return answer;
+    }
+};
