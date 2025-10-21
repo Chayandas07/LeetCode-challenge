@@ -1,0 +1,64 @@
+class Solution {
+public:
+    int maxFrequency(vector<int>& nums, int k, int numOperations) {
+        const int MAXN = 200005;
+        static vector<int> freq(MAXN), prefixSum(MAXN);
+
+        int maxValue = (*max_element(nums.begin(), nums.end()));
+        int limit = (maxValue + k + 2);
+
+        // Reset frequency array
+        fill(freq.begin(), freq.begin() + limit, 0);
+
+        // Count occurrences of each number
+        for (int num : nums) {
+            freq[num]++;
+        }
+
+        // If no operations are allowed, return the highest existing frequency
+        if (numOperations == 0) {
+            return (*max_element(freq.begin(), freq.begin() + limit));
+        } else {
+            // Build prefix sum array
+            prefixSum[0] = freq[0];
+            for (int i = 1; i < limit; i++) {
+                prefixSum[i] = (prefixSum[i - 1] + freq[i]);
+            }
+
+            int best = 0;
+
+            // Check each possible target value
+            for (int target = 0; target <= maxValue; target++) {
+                int left;
+                if (target > k) {
+                    left = (target - k);
+                } else {
+                    left = 0;
+                }
+
+                int right;
+                if ((target + k) < limit) {
+                    right = (target + k);
+                } else {
+                    right = (limit - 1);
+                }
+
+                int total = (prefixSum[right] - ((left > 0) ? prefixSum[left - 1] : 0));
+                int changeable = (total - freq[target]);
+
+                int possible;
+                if (numOperations < changeable) {
+                    possible = (freq[target] + numOperations);
+                } else {
+                    possible = (freq[target] + changeable);
+                }
+
+                if (possible > best) {
+                    best = possible;
+                }
+            }
+
+            return best;
+        }
+    }
+};
