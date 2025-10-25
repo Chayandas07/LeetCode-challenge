@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int totalMoney(int n) {
+        int sum = 0, i = 1, j = 0;
+        for(int cnt = 1; cnt <= n; ++cnt)
+        {
+            sum += i;
+            i++;
+            if(i > 7+j)
+            {
+                j++;
+                i = 1 + j;
+            }
+        }
+        return sum;
+    }
+};
