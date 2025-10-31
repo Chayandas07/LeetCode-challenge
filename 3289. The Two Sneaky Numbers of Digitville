@@ -1,0 +1,21 @@
+class Solution {
+public:
+    vector<int> getSneakyNumbers(vector<int>& nums) {
+        int asum = 0, osum, asqsum = 0, osqsum, n = nums.size() - 2;
+        if(n < 2){
+            return {};
+        }
+        osum = (n - 1)*(n)/2;
+        osqsum = (n - 1)*(n)*(2*n - 1)/6;
+
+        for(int i = 0 ; i < n + 2; i++){
+            asum += nums[i];
+            asqsum += nums[i]*nums[i];
+        }
+
+        int s = asum - osum, q = asqsum - osqsum;
+        int d = pow((2*q - s*s), 0.5);
+        int a = (s + d)/2, b = (s - d)/2;
+        return {b, a};
+    }
+};
