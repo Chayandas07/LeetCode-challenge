@@ -1,0 +1,17 @@
+class Solution {
+public:
+    int findFinalValue(vector<int>& nums, int original) {
+        bitset<1001> memo;
+        
+        for (int x : nums)
+            if (x <= 1000) memo[x] = 1;
+
+        int x = original;
+        while (x <= 1000) {
+            if (memo[x]) x *= 2;
+            else break;
+        }
+
+        return x;
+    }
+};
