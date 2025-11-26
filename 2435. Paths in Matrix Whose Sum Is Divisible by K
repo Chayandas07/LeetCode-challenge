@@ -1,0 +1,34 @@
+// no branch
+class Solution {
+public:
+    static int numberOfPaths(vector<vector<int>>& grid, int k) {
+        const int m=grid.size(), n=grid[0].size();
+        const int mod=1e9+7;
+        int dp[2][n][k];
+        memset(dp, 0, sizeof(dp));
+        dp[0][0][(k-grid[0][0]%k)%k]=1;
+        for(int j=1; j<n; j++){
+            const int x=grid[0][j];
+            for(int r=0; r<k; r++){
+                dp[0][j][r]+=dp[0][j-1][(x+r)%k];
+                dp[0][j][r]%=mod;
+            }
+        }
+        for(int i=1; i<m; i++){
+            const int x0=grid[i][0];
+            for(int r=0; r<k; r++){
+                dp[i&1][0][r]=dp[(i-1)&1][0][(r+x0)%k];
+            }
+            for(int j=1; j<n; j++){
+                const int x=grid[i][j];
+                for(int r=0; r<k; r++){
+                    const int R0=(r+x)%k;
+                    dp[i&1][j][r]=dp[(i-1)&1][j][R0];
+                    dp[i&1][j][r]+=dp[i&1][j-1][R0];
+                    dp[i&1][j][r]%=mod;
+                }
+            }
+        }
+        return dp[(m-1)&1][n-1][0];
+    }
+};
