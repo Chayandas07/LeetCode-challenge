@@ -1,0 +1,40 @@
+class Solution {
+public:
+    long long maxSubarraySum(vector<int>& nums, int k) {
+        vector<int> dp(nums.size(), -1);
+
+        vector<long long> prefix(nums.size(), 0);
+        prefix[0] = nums[0];
+        for (int i = 1; i < nums.size(); i++) {
+            prefix[i] = prefix[i - 1] + nums[i];
+        }
+        long long ans = prefix[k - 1];
+        if ( nums.size() % k ==0 ){
+            ans = max ( prefix[nums.size() -1] ,prefix[k - 1] );
+        }
+        if ( k == 1){
+            ans = *max_element(prefix.begin(), prefix.end());
+        }
+
+        for (int i = k; i < nums.size(); i++) {
+            if ((i + 1) % k == 0) {
+                ans = max(ans, prefix[i]);
+            }
+            int r = i % k;
+            if (dp[r] == -1) {
+                dp[r] = r;
+                long long sum =
+                    prefix[i] - prefix[r];
+                ans = max(ans, sum);
+            } else {
+                long long sum = prefix[i] - prefix[dp[r]];
+                ans = max(ans, sum);
+            }
+            if (prefix[i] < prefix[dp[r]]) {
+                dp[r] = i;
+            }
+        }
+
+        return ans;
+    }
+};
