@@ -1,0 +1,60 @@
+class Solution {
+public:
+    // Define the modulo constant
+    int mod=1e9+7;
+
+    int numberOfWays(string s) {
+        
+        int n=s.size();
+        int c=0;
+        
+        // Step 1: Count total seats
+        for(int i=0; i<n; i++)
+        {
+            if(s[i]=='S')
+             c++;
+        }
+        
+        // Step 1: Edge Case Check
+        // If total seats is 0 or odd, division is impossible.
+        if(c==0 || c%2 != 0)
+          return 0;
+        // If total seats is exactly 2, the whole corridor is one section (1 way).
+        if(c==2)
+          return 1;
+        
+        // Use long long for result to safely handle intermediate products before modulo.
+        long r=1; 
+        int seat=0; // Counts seats encountered so far
+        int plant=0; // Counts plants in the current flexible gap
+        
+        // Step 2-4: Iterative Counting for Gaps
+        for(int i=0; i<n; i++)
+        {
+            if(s[i]=='S')
+            {
+                seat++;
+            }
+            // If 'P' is encountered *after* an even number of seats (S_2, S_4, etc.)
+            else if(seat>=2 && (seat%2)==0) 
+            {
+                // This 'P' is in a flexible gap, e.g., between S_2 and S_3.
+                plant++;
+            }
+            
+            // This condition is met when we hit the next odd seat (S_3, S_5, etc.), 
+            // and we have plants in the gap (plant > 0).
+            if(seat > 2 && seat%2 != 0 && plant > 0)
+            {
+                // The gap is closed. The number of ways to place the wall is plant + 1.
+                // Apply the multiplication principle with modulo operation.
+                r=((r%mod)*((plant+1)%mod))%mod;
+                // Reset plant count for the next gap (e.g., between S_4 and S_5)
+                plant=0;
+            }
+        }
+        
+        // Step 5: Final Result
+        return (int)r;
+    }
+};
