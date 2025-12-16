@@ -1,0 +1,91 @@
+class Solution {
+public:
+    int maxProfit(int n, vector<int>& present, vector<int>& future, vector<vector<int>>& hierarchy, int budget) {
+        vector<vector<int>> tree(n);
+        vector<int> in_degree(n, 0);
+        for (auto &e : hierarchy) {
+            int u = e[0] - 1;
+            int v = e[1] - 1;
+            tree[u].push_back(v);
+            in_degree[v]++;
+        }
+        int root = 0;
+        for (int i = 0; i < n; i++) {
+            if (in_degree[i] == 0) {
+                root = i;
+                break;
+            }
+        }
+        const long long INF = -(long long)1e15;
+        vector<int> capability(n, 0);
+        function<long long(int)> cap = [&](int u) -> long long {
+            long long s = present[u];
+            for (int v : tree[u]) s += cap(v);
+            capability[u] = (int)min<long long>(budget, s);
+            return s;
+        };
+        cap(root);
+
+        vector<vector<long long>> dp0(n), dp1(n);
+
+        auto merge = [&](const vector<long long>& a, const vector<long long>& b) -> vector<long long> {
+            int len_a = (int)a.size() - 1;
+            int len_b = (int)b.size() - 1;
+            int total = min(budget, len_a + len_b);
+
+            vector<long long> c(total + 1, INF);
+
+            for (int i = 0; i <= min(len_a, total); i++) {
+                long long ai = a[i];
+                if (ai == INF) 
+                    continue;
+                int maxj = min(len_b, total - i);
+                for (int j = 0; j <= maxj; j++) {
+                    long long bj = b[j];
+                    if (bj == INF) 
+                        continue;
+                    long long val = ai + bj;
+                    if (val > c[i + j]) c[i + j] = val;
+                }
+            }
+            return c;
+        };
+
+        function<void(int)> dfs = [&](int u) {
+            for (int v : tree[u]) 
+                dfs(v);
+
+            vector<long long> skip(capability[u] + 1, INF);
+            vector<long long> base(capability[u] + 1, INF);
+            skip[0] = 0;
+            base[0] = 0;
+
+            for (int v : tree[u]) {
+                skip = merge(skip, dp0[v]);
+                base = merge(base, dp1[v]);
+            }
+
+            auto comp = [&](int parentBought) -> vector<long long> {
+                int price = parentBought ? (present[u] / 2) : present[u];
+                long long profit = (long long)future[u] - price;
+                vector<long long> maximize = skip; 
+                if (price <= capability[u]) {
+                    for (int b = price; b <= capability[u]; b++) {
+                        if (base[b - price] != INF) {
+                            long long can = base[b - price] + profit;
+                            if (can > maximize[b]) 
+                                maximize[b] = can;
+                        }
+                    }
+                }
+                return maximize;
+            };
+
+            dp0[u] = comp(0);
+            dp1[u] = comp(1);
+        };
+
+        dfs(root);
+        return *max_element(dp0[root].begin(), dp0[root].end());
+    }
+};
