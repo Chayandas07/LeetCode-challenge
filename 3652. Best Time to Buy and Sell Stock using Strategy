@@ -1,0 +1,47 @@
+class Solution {
+public:
+    long long maxProfit(vector<int>& prices, vector<int>& strategy, int k) {
+        int n = prices.size();
+        long long best = 0;
+
+        // Compute the profit of the last n-k elements
+        for (int i = k; i < n; i++) {
+            best += prices[i] * strategy[i];
+        }
+        // Current window: initially will hold profit of n-k elements,
+        // and add window of first k elements
+        long long window = best;
+
+        for (int i = 0; i < k; i++) {
+            // Add profit of first k elements to total profit without
+            // modification
+            best += prices[i] * strategy[i];
+
+            // Add profit for the first window
+            if (i >= k / 2)
+                window += prices[i];
+        }
+
+        // Update best for first window
+        best = max(best, window);
+
+        // Adjust window for all remaining elements
+        for (int i = k; i < n; i++) {
+            // Change first 0 of previous window to strategy
+            window += prices[i - k] * strategy[i - k];
+
+            // Change the first 1 of previous window to 0
+            window -= prices[i - k / 2];
+
+            // Change strategy to the right of previous window to 1
+            // Remove strategy value
+            window -= prices[i] * strategy[i];
+            // Change to 1
+            window += prices[i];
+
+            // Update best
+            best = max(best, window);
+        }
+        return best;
+    }
+};
