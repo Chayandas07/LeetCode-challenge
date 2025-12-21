@@ -1,0 +1,25 @@
+class Solution {
+  public:
+    vector<int> countXInRange(vector<int>& arr, vector<vector<int>>& que) {
+        // code here
+        map<int,vector<int>> mp;
+        for(int i=0;i<arr.size();i++){
+            mp[arr[i]].push_back(i);
+        }
+        vector<int> res;
+        for(auto it:que){
+            int x = it[0];
+            int y = it[1];
+            int num = it[2];
+             auto t = lower_bound(arr.begin()+x,arr.begin()+y+1,num);
+             auto ti = upper_bound(arr.begin()+x,arr.begin()+y+1,num);
+             if(*t == num){
+                ti--;
+                 res.push_back(ti-t+1);
+             }else{
+                 res.push_back(0);
+             }
+        }
+        return res;
+    }
+};
