@@ -1,0 +1,45 @@
+class Solution {
+public:
+    int maxTwoEvents(vector<vector<int>>& events) {
+        vector<int> times;
+        for(auto& e : events) {
+            times.push_back(e[0]);
+            times.push_back(e[1] + 1);
+        }
+        
+        sort(times.begin(), times.end());
+        times.erase(unique(times.begin(), times.end()), times.end());
+        
+        int k = times.size();
+        vector<int> max_start(k, 0);
+        vector<int> max_end(k, 0);
+        
+        for(auto& e : events) {
+            int s = lower_bound(times.begin(), times.end(), e[0]) - times.begin();
+            int e_next = lower_bound(times.begin(), times.end(), e[1] + 1) - times.begin();
+            
+            max_start[s] = max(max_start[s], e[2]);
+            max_end[e_next] = max(max_end[e_next], e[2]);
+        }
+        
+        vector<int> pref(k + 1, 0);
+        for(int i = 0; i < k; ++i) {
+            pref[i + 1] = max(pref[i], max_end[i]);
+        }
+        
+        vector<int> suf(k + 1, 0);
+        for(int i = k - 1; i >= 0; --i) {
+            suf[i] = max(suf[i + 1], max_start[i]);
+        }
+        
+        int ans = 0;
+
+        ans = max(ans, suf[0]);
+
+        for(int i = 0; i < k; ++i) {
+            ans = max(ans, pref[i+1] + suf[i]);
+        }
+        
+        return ans;
+    }
+};
