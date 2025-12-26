@@ -1,0 +1,16 @@
+class Solution {
+  public:
+    int kthSmallest(vector<vector<int>> &mat, int k) {
+        // code here
+        vector<int> temp;
+    
+        for (auto& row : mat) {
+            for (int x : row) {
+                temp.push_back(x);
+            }
+        }
+        sort(temp.begin(), temp.end());
+        return temp[k-1];
+    }
+    
+};
