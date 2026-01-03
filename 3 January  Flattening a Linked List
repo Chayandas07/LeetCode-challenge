@@ -1,0 +1,15 @@
+const int m = 1e9 + 7;
+class Solution {
+public:
+    static int numOfWays(const int n) noexcept {
+        long diff = 6;
+        long same = 6;
+        for (int i = 1; i < n; ++i) {
+            long newDiff = (2 * diff + 2 * same) % m;
+            long newSame = (2 * diff + 3 * same) % m;
+            same = newSame;
+            diff = newDiff;
+        }
+        return (same + diff) % m;
+    }
+};
