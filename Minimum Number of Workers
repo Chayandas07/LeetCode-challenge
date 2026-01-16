@@ -1,0 +1,39 @@
+class Solution {
+  public:
+    int minMen(vector<int>& arr) {
+    int n = arr.size();
+    vector<pair<int,int>> intervals;
+
+    for (int i = 0; i < n; i++) {
+        if (arr[i] != -1) {
+            int L = max(0, i - arr[i]);
+            int R = min(n - 1, i + arr[i]);
+            intervals.push_back({L, R});
+        }
+    }
+
+    sort(intervals.begin(), intervals.end());
+
+    int count = 0;
+    int currentEnd = 0;
+    int i = 0;
+    
+    while (currentEnd < n) {
+        int farthest = currentEnd - 1;
+
+        while (i < intervals.size() && intervals[i].first <= currentEnd) {
+            farthest = max(farthest, intervals[i].second);
+            i++;
+        }
+
+        if (farthest < currentEnd) {
+            return -1; 
+        }
+
+        count++;
+        currentEnd = farthest + 1;
+    }
+
+    return count;
+    }
+};
