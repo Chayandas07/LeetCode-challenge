@@ -1,0 +1,55 @@
+class Solution {
+public:
+    int minimumPairRemoval(vector<int>& nums) {
+        int n = nums.size();
+        vector<long long> a(nums.begin(), nums.end());
+        vector<int> l(n), r(n);
+        vector<bool> alive(n, true);
+        for (int i = 0; i < n; i++) {
+            l[i] = i - 1;
+            r[i] = i + 1;
+        }
+        r[n - 1] = -1;
+
+        int bad = 0;
+        for (int i = 1; i < n; i++)
+            if (a[i] < a[i - 1]) bad++;
+
+        priority_queue<pair<long long,int>, vector<pair<long long,int>>, greater<>> pq;
+        for (int i = 0; i + 1 < n; i++)
+            pq.push({a[i] + a[i + 1], i});
+
+        int ops = 0;
+
+        while (bad > 0) {
+            auto [s, i] = pq.top();
+            pq.pop();
+            if (!alive[i] || r[i] == -1) continue;
+            int j = r[i];
+            if (!alive[j] || a[i] + a[j] != s) continue;
+
+            int li = l[i], rj = r[j];
+
+            if (li != -1 && a[i] < a[li]) bad--;
+            if (rj != -1 && a[rj] < a[j]) bad--;
+            if (a[j] < a[i]) bad--;
+
+            a[i] += a[j];
+            alive[j] = false;
+            r[i] = rj;
+            if (rj != -1) l[rj] = i;
+
+            if (li != -1 && a[i] < a[li]) bad++;
+            if (rj != -1 && a[rj] < a[i]) bad++;
+
+            if (li != -1)
+                pq.push({a[li] + a[i], li});
+            if (rj != -1)
+                pq.push({a[i] + a[rj], i});
+
+            ops++;
+        }
+
+        return ops;
+    }
+};
