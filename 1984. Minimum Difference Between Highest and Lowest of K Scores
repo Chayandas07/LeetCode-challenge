@@ -1,0 +1,66 @@
+class Solution {
+public:
+    long long minimumCost(string source, string target, vector<string>& original, vector<string>& changed, vector<int>& cost) {
+        int n = source.size();
+        const long long INF = 1e18;
+
+        unordered_map<string,int> id;
+        int idx = 0;
+
+        for(auto &s : original)
+            if(!id.count(s)) id[s] = idx++;
+
+        for(auto &s : changed)
+            if(!id.count(s)) id[s] = idx++;
+
+        int m = idx;
+
+        vector<vector<long long>> dist(m, vector<long long>(m, INF));
+
+        for(int i=0;i<m;i++)
+            dist[i][i] = 0;
+
+        for(int i=0;i<original.size();i++){
+            int u = id[original[i]];
+            int v = id[changed[i]];
+            dist[u][v] = min(dist[u][v], (long long)cost[i]);
+        }
+
+        for(int k=0;k<m;k++)
+            for(int i=0;i<m;i++)
+                for(int j=0;j<m;j++)
+                    if(dist[i][k] < INF && dist[k][j] < INF)
+                        dist[i][j] = min(dist[i][j], dist[i][k] + dist[k][j]);
+
+        unordered_set<int> lengths;
+        for(auto &s : original)
+            lengths.insert(s.size());
+
+        vector<long long> dp(n+1, INF);
+        dp[0] = 0;
+
+        for(int i=0;i<n;i++){
+            if(dp[i] == INF) continue;
+
+            if(source[i] == target[i])
+                dp[i+1] = min(dp[i+1], dp[i]);
+
+            for(int len : lengths){
+
+                int j = i + len;
+                if(j > n) continue;
+
+                string s = source.substr(i, len);
+                string t = target.substr(i, len);
+
+                if(id.count(s) && id.count(t)){
+                    long long c = dist[id[s]][id[t]];
+                    if(c < INF)
+                        dp[j] = min(dp[j], dp[i] + c);
+                }
+            }
+        }
+
+        return dp[n] == INF ? -1 : dp[n];
+    }
+};
