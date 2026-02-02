@@ -1,0 +1,69 @@
+class Solution {
+public:
+    long long minimumCost(vector<int>& nums, int k, int dist) {
+        int n = (int)nums.size();
+        long long base = nums[0];
+        int kSmall = k - 1;
+
+        vector<int> a(nums.begin() + 1, nums.end());
+        int m = (int)a.size();
+
+        multiset<int> small, big;
+        long long sumSmall = 0;
+
+        auto rebalance = [&]() {
+            while ((int)small.size() > kSmall) {
+                auto it = prev(small.end());
+                sumSmall -= *it;
+                big.insert(*it);
+                small.erase(it);
+            }
+            while ((int)small.size() < kSmall && !big.empty()) {
+                auto it = big.begin();
+                sumSmall += *it;
+                small.insert(*it);
+                big.erase(it);
+            }
+        };
+
+        auto add = [&](int x) {
+            if (small.empty() || x <= *prev(small.end())) {
+                small.insert(x);
+                sumSmall += x;
+            } else {
+                big.insert(x);
+            }
+            rebalance();
+        };
+
+        auto removeVal = [&](int x) {
+            auto itS = small.find(x);
+            if (itS != small.end()) {
+                sumSmall -= x;
+                small.erase(itS);
+            } else {
+                auto itB = big.find(x);
+                if (itB != big.end()) 
+                    big.erase(itB);
+            }
+            rebalance();
+        };
+
+        for (int i = 0; i <= dist && i < m; i++) add(a[i]);
+
+        long long res = base + sumSmall;
+
+        int l = 0;
+        int r = dist;
+
+        while (r + 1 < m) {
+            removeVal(a[l]);
+            l++;
+            r++;
+            add(a[r]);
+            res = min(res, base + sumSmall);
+        }
+
+        return res;
+    }
+};
