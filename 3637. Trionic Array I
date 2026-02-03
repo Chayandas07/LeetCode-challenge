@@ -1,0 +1,42 @@
+class Solution {
+public:
+    bool isTrionic(vector<int>& nums) {
+        int n = nums.size();
+        if(n < 4) return false;
+        int p = 0, q = 0;
+        for(int i = 1; i < n; i++) {
+            //Phase 1: strictly increasing checks.
+            if(nums[i] > nums[i-1] && p == 0) {
+                continue;
+            }
+            //Turning point from Phase 1 to Phase 2
+            else if(nums[i] < nums[i-1] && p == 0) {
+                if(i == 1) return false;
+                p = i;
+                continue;
+            }
+            //Phase 2: strictly decreasing checks
+            else if(p != 0 && q == 0 && nums[i] < nums[i-1]) {
+                continue;
+            }
+            //Turning point from Phase 2 to Phase 3
+            else if(p != 0 && q == 0 && nums[i] > nums[i-1]) {
+                if(i - p < 1) return false;
+                q = i;
+                continue;
+            }
+            //Phase 3: strictly increasing checks again
+            else if(p != 0 && q != 0 && nums[i] > nums[i-1]) {
+                continue;
+            }
+            //If the pattern is broken anywhere before
+            //we reach the end, its automatically false.
+            else {
+                return false;
+            }
+        }
+        //validating if all turning points exist
+        if(p == 0 || q == 0) return false;
+        return true;
+    }
+};
