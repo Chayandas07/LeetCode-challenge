@@ -1,0 +1,14 @@
+class Solution {
+public:
+    bool hasAllCodes(string s, int k) {
+        const int len = s.size();
+        unordered_set<string>unique;
+        for(int i=0;i<len-k+1;++i){
+            string sub = s.substr(i,k);
+            unique.insert(sub);
+        }
+        int expected = 1;
+        while(k--){expected*=2;}
+        return unique.size() == expected;
+    }
+};
