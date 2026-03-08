@@ -1,0 +1,16 @@
+class Solution {
+  public:
+    virtual bool pythagoreanTriplet(vector<int>& arr){
+      unordered_map<int, bool> visited;
+      for(int &x: arr) visited[x*x]=true;
+      
+      int n=arr.size();
+      for(int i=0; i<n; i++){
+        for(int j=i+1; j<n; j++){
+          if(visited[arr[i]*arr[i] + arr[j]*arr[j]]) return true;    
+        }  
+      }
+      
+      return false;
+    }
+};
