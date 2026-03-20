@@ -1,0 +1,26 @@
+int kksub[900], INF=2e5+1;
+class Solution {
+public:
+    static vector<vector<int>> minAbsDiff(vector<vector<int>>& grid, int k) {
+        const int m=grid.size(), n=grid[0].size(), kk=k*k;
+        vector<vector<int>> ans(m-k+1, vector<int>(n-k+1));
+        const int m0=m-k, n0=n-k;
+        for (int i=0; i<=m0; i++) {
+            for (int j=0; j<=n0; j++) {
+                int idx=0, ik=i+k, jk=j+k;
+                for (int x=i; x<ik; x++) {
+                    for (int y=j; y<jk; y++) 
+                        kksub[idx++]=grid[x][y];
+                }
+                sort(kksub, kksub+kk);
+                int minD=INF;
+                for(int a=1; a<kk; a++){
+                    int diff=kksub[a]-kksub[a-1];
+                    if (diff>0) minD=min(minD, diff);
+                }
+                ans[i][j]=(minD==INF)?0:minD;
+            }
+        }
+        return ans;
+    }
+}; 
