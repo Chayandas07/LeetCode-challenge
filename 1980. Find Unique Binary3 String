@@ -1,0 +1,32 @@
+long long rowSum[100000], colSum[100000];
+class Solution {
+public:
+    static bool canPartitionGrid(vector<vector<int>>& grid) {
+        const int r=grid.size(), c=grid[0].size();
+        memset(rowSum, 0, r*8);
+        memset(colSum, 0, c*8);
+        for (int i=0; i<r; i++){
+            if (i>0)[[likely]]
+                rowSum[i]+=rowSum[i-1];
+            for(int j=0; j<c; j++){
+                const int x=grid[i][j];
+                rowSum[i]+=x;
+                colSum[j]+=x;
+            }
+        }
+        partial_sum(colSum, colSum+c, colSum);
+        const long long Tsum=colSum[c-1], target=Tsum/2;
+        if (Tsum&1) return 0;
+        int i=lower_bound(rowSum, rowSum+r, target)-rowSum;
+        if (i<r && rowSum[i]==target) return 1;
+        int j=lower_bound(colSum, colSum+c, target)-colSum;
+        return j<c && colSum[j]==target;
+    }
+};
+
+auto init = []() {
+    ios::sync_with_stdio(0);
+    cin.tie(0);
+    cout.tie(0);
+    return 'c';
+}();
