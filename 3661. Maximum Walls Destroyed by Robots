@@ -1,0 +1,102 @@
+class Solution {
+    public int maxWalls(int[] robots, int[] distance, int[] walls) {
+        int n = robots.length;
+
+        // Store robots as {position, distance}
+        int[][] x = new int[n + 1][2];
+        for (int i = 0; i < n; i++) {
+            x[i][0] = robots[i];
+            x[i][1] = distance[i];
+        }
+
+        // Sort robots by position
+        Arrays.sort(x, 0, n, (a, b) -> a[0] - b[0]);
+
+        // Sort walls
+        Arrays.sort(walls);
+
+        // Dummy robot
+        x[n][0] = (int)1e9;
+        x[n][1] = 0;
+
+        // Binary search helpers
+        // lower_bound
+        java.util.function.BiFunction<int[], Integer, Integer> lowerBound = (arr, target) -> {
+            int l = 0, r = arr.length;
+            while (l < r) {
+                int mid = (l + r) / 2;
+                if (arr[mid] < target) l = mid + 1;
+                else r = mid;
+            }
+            return l;
+        };
+
+        // upper_bound
+        java.util.function.BiFunction<int[], Integer, Integer> upperBound = (arr, target) -> {
+            int l = 0, r = arr.length;
+            while (l < r) {
+                int mid = (l + r) / 2;
+                if (arr[mid] <= target) l = mid + 1;
+                else r = mid;
+            }
+            return l;
+        };
+
+        // Function to count walls in [l, r]
+        java.util.function.BiFunction<Integer, Integer, Integer> query = (l, r) -> {
+            if (l > r) return 0;
+            int it1 = upperBound.apply(walls, r);
+            int it2 = lowerBound.apply(walls, l);
+            return it1 - it2;
+        };
+
+        // dp[i][0] = shoot LEFT
+        // dp[i][1] = shoot RIGHT
+        int[][] dp = new int[n][2];
+
+        // Base case
+        dp[0][0] = query.apply(x[0][0] - x[0][1], x[0][0]);
+
+        if (n > 1) {
+            dp[0][1] = query.apply(
+                x[0][0],
+                Math.min(x[1][0] - 1, x[0][0] + x[0][1])
+            );
+        } else {
+            dp[0][1] = query.apply(x[0][0], x[0][0] + x[0][1]);
+        }
+
+        // DP transitions
+        for (int i = 1; i < n; i++) {
+
+            // Case 1: shoot RIGHT
+            dp[i][1] = Math.max(dp[i - 1][0], dp[i - 1][1]) +
+                       query.apply(
+                           x[i][0],
+                           Math.min(x[i + 1][0] - 1, x[i][0] + x[i][1])
+                       );
+
+            // Case 2: shoot LEFT (no overlap)
+            dp[i][0] = dp[i - 1][0] +
+                       query.apply(
+                           Math.max(x[i][0] - x[i][1], x[i - 1][0] + 1),
+                           x[i][0]
+                       );
+
+            // Case 3: shoot LEFT with overlap handling
+            int leftStart = Math.max(x[i][0] - x[i][1], x[i - 1][0] + 1);
+            int leftEnd = x[i][0];
+
+            int overlapStart = leftStart;
+            int overlapEnd = Math.min(x[i - 1][0] + x[i - 1][1], x[i][0] - 1);
+
+            int res = dp[i - 1][1]
+                      + query.apply(leftStart, leftEnd)
+                      - query.apply(overlapStart, overlapEnd);
+
+            dp[i][0] = Math.max(dp[i][0], res);
+        }
+
+        return Math.max(dp[n - 1][0], dp[n - 1][1]);
+    }
+}
