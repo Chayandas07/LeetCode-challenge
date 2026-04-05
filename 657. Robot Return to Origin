@@ -1,0 +1,17 @@
+class Solution {
+    public boolean judgeCircle(String moves) {
+        int lcnt = 0, rcnt = 0, ucnt = 0, dcnt = 0;
+        for (char move : moves.toCharArray()) {
+            if (move == 'U') {
+                ucnt++;
+            } else if (move == 'D') {
+                dcnt++;
+            } else if (move == 'L') {
+                lcnt++;
+            } else if (move == 'R') {
+                rcnt++;
+            }
+        }
+        return rcnt == lcnt && ucnt == dcnt;
+    }
+}
