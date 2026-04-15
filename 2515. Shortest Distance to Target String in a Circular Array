@@ -1,0 +1,25 @@
+class Solution {
+    public int closestTarget(String[] words, String target, int startIndex) {
+        int n = words.length;
+
+        int left = startIndex;
+        int right = startIndex;
+        int steps = 0;
+
+        while (steps <= n / 2) {
+            if (words[left].equals(target) || words[right].equals(target))
+                return steps;
+
+            left = (left - 1 + n) % n;
+            right = (right + 1) % n;
+            steps++;
+
+            if (left == right) {
+                if (words[left].equals(target)) return steps;
+                break;
+            }
+        }
+
+        return -1;
+    }
+}
