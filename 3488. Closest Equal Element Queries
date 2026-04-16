@@ -1,0 +1,45 @@
+class Solution {
+    public List<Integer> solveQueries(int[] nums, int[] queries) {
+        int n = nums.length;
+
+        Map<Integer, List<Integer>> map = new HashMap<>();
+
+        // Step 1: store indices
+        for (int i = 0; i < n; i++) {
+            map.computeIfAbsent(nums[i], k -> new ArrayList<>()).add(i);
+        }
+
+        // Step 2: precompute answers for each index
+        int[] best = new int[n];
+        Arrays.fill(best, -1);
+
+        for (List<Integer> list : map.values()) {
+            int size = list.size();
+
+            if (size == 1) continue;
+
+            for (int i = 0; i < size; i++) {
+                int curr = list.get(i);
+
+                int prev = list.get((i - 1 + size) % size);
+                int next = list.get((i + 1) % size);
+
+                int d1 = Math.abs(curr - prev);
+                d1 = Math.min(d1, n - d1);
+
+                int d2 = Math.abs(curr - next);
+                d2 = Math.min(d2, n - d2);
+
+                best[curr] = Math.min(d1, d2);
+            }
+        }
+
+        // Step 3: answer queries
+        List<Integer> ans = new ArrayList<>();
+        for (int q : queries) {
+            ans.add(best[q]);
+        }
+
+        return ans;
+    }
+}
