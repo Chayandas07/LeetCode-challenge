@@ -1,0 +1,58 @@
+class Solution {
+    int[] parent, rank;
+    int find(int x) {
+        if (parent[x] != x)
+            parent[x] = find(parent[x]);
+        return parent[x];
+    }
+
+    void uni(int a, int b) {
+        int fa = find(a), fb = find(b);
+        if (fa == fb) 
+            return;
+
+        if (rank[fa] < rank[fb]) {
+            int tmp = fa; fa = fb; fb = tmp;
+        }
+
+        parent[fb] = fa;
+        if (rank[fa] == rank[fb]) 
+            rank[fa]++;
+    }
+
+    public int minimumHammingDistance(int[] source, int[] target, int[][] allowedSwaps) {
+        int n = source.length;
+        parent = new int[n];
+        rank = new int[n];
+
+        for (int i = 0; i < n; i++) 
+            parent[i] = i;
+
+        for (int[] p : allowedSwaps) {
+            uni(p[0], p[1]);
+        }
+
+        Map<Integer, List<Integer>> groups = new HashMap<>();
+        for (int i = 0; i < n; i++) {
+            groups.computeIfAbsent(find(i), k -> new ArrayList<>()).add(i);
+        }
+
+        int ans = 0;
+
+        for (List<Integer> idxs : groups.values()) {
+            Map<Integer, Integer> freq = new HashMap<>();
+            for (int i : idxs) {
+                freq.put(source[i], freq.getOrDefault(source[i], 0) + 1);
+            }
+            for (int i : idxs) {
+                if (freq.getOrDefault(target[i], 0) > 0) {
+                    freq.put(target[i], freq.get(target[i]) - 1);
+                } else {
+                    ans++;
+                }
+            }
+        }
+
+        return ans;
+    }
+}
