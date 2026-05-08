@@ -1,0 +1,103 @@
+import java.util.*;
+
+class Solution {
+    public int minJumps(int[] nums) {
+        int n = nums.length;
+
+        if (n == 1)
+            return 0;
+
+        int MAXV = 0;
+        for (int num : nums) {
+            MAXV = Math.max(MAXV, num);
+        }
+
+        // Smallest Prime Factor sieve
+        int[] spf = new int[MAXV + 1];
+
+        for (int i = 0; i <= MAXV; i++) {
+            spf[i] = i;
+        }
+
+        for (int i = 2; i * i <= MAXV; i++) {
+            if (spf[i] == i) {
+                for (int j = i * i; j <= MAXV; j += i) {
+                    if (spf[j] == j) {
+                        spf[j] = i;
+                    }
+                }
+            }
+        }
+
+        // Check prime
+        // x is prime if spf[x] == x
+        Map<Integer, List<Integer>> divMap = new HashMap<>();
+
+        // Build factor -> indices map
+        for (int idx = 0; idx < n; idx++) {
+            int x = nums[idx];
+            Set<Integer> factors = new HashSet<>();
+
+            while (x > 1) {
+                int p = spf[x];
+                factors.add(p);
+
+                while (x % p == 0) {
+                    x /= p;
+                }
+            }
+
+            for (int p : factors) {
+                divMap.computeIfAbsent(p, k -> new ArrayList<>()).add(idx);
+            }
+        }
+
+        Queue<int[]> q = new LinkedList<>();
+        q.offer(new int[]{0, 0}); // {index, steps}
+
+        boolean[] visited = new boolean[n];
+        visited[0] = true;
+
+        Set<Integer> usedPrime = new HashSet<>();
+
+        while (!q.isEmpty()) {
+            int[] curr = q.poll();
+
+            int i = curr[0];
+            int steps = curr[1];
+
+            if (i == n - 1) {
+                return steps;
+            }
+
+            // Adjacent moves
+            int[] next = {i - 1, i + 1};
+
+            for (int ni : next) {
+                if (ni >= 0 && ni < n && !visited[ni]) {
+                    visited[ni] = true;
+                    q.offer(new int[]{ni, steps + 1});
+                }
+            }
+
+            // Prime teleport
+            int val = nums[i];
+
+            if (val > 1 && spf[val] == val && !usedPrime.contains(val)) {
+
+                List<Integer> indices = divMap.getOrDefault(val, new ArrayList<>());
+
+                for (int ni : indices) {
+                    if (!visited[ni]) {
+                        visited[ni] = true;
+                        q.offer(new int[]{ni, steps + 1});
+                    }
+                }
+
+                usedPrime.add(val);
+            }
+        }
+
+        return -1;
+    }
+}
