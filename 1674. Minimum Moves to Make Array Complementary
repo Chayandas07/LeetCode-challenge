@@ -1,0 +1,22 @@
+class Solution {
+    public int minMoves(int[] nums, int limit) {
+        int n = nums.length;
+        int[] diff = new int[2 * limit + 2];
+        for (int i = 0; i < n / 2; i++) {
+            int vala = Math.min(nums[i], nums[n - 1 - i]);
+            int valb = Math.max(nums[i], nums[n - 1 - i]);
+            diff[2] += 2;
+            diff[2 * limit + 1] -= 2;
+            diff[vala + 1] -= 1;
+            diff[valb + limit + 1] += 1;
+            diff[vala + valb] -= 1;
+            diff[vala + valb + 1] += 1;
+        }
+        int res = n, cur = 0;
+        for (int i = 2; i <= 2 * limit; i++) {
+            cur += diff[i];
+            res = Math.min(res, cur);
+        }
+        return res;
+    }
+}
